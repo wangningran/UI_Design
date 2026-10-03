@@ -1,0 +1,61 @@
+@import "tailwindcss";
+
+/*
+ * Design tokens — change these to re-skin the whole template.
+ * Palette: warm paper + near-black ink (Aesop / Tracksmith),
+ * a single accent (oxblood), hairline rules instead of shadows.
+ */
+@theme {
+  --color-paper: #f3efe6;
+  --color-paper-2: #ebe5d8;
+  --color-ink: #1b1a17;
+  --color-ink-2: #3a3833;
+  --color-muted: #77726a;
+  --color-line: #d6cfbf;
+  --color-accent: #7a2e1f;
+  --color-night: #141412;
+
+  --font-serif: "Fraunces", Georgia, serif;
+  --font-sans: "Inter Tight", ui-sans-serif, system-ui, sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, monospace;
+
+  --ease-soft: cubic-bezier(0.22, 0.61, 0.36, 1);
+}
+
+@layer base {
+  html {
+    -webkit-font-smoothing: antialiased;
+  }
+  body {
+    @apply bg-paper text-ink font-sans;
+  }
+  ::selection {
+    @apply bg-ink text-paper;
+  }
+}
+
+@layer components {
+  /* Small, tracked, uppercase label — the Satisfy-style counterpoint to big serif headlines */
+  .eyebrow {
+    @apply font-mono text-[11px] uppercase tracking-[0.14em];
+  }
+  .container-x {
+    @apply mx-auto w-full max-w-[1600px] px-4 sm:px-6 lg:px-10;
+  }
+  .link-underline {
+    background: linear-gradient(currentColor, currentColor) 0 100% / 0 1px no-repeat;
+    transition: background-size 0.4s var(--ease-soft);
+  }
+  .link-underline:hover {
+    background-size: 100% 1px;
+  }
+  /* Image placeholder: hatched paper, until real product photography is supplied */
+  .placeholder-hatch {
+    background-color: var(--color-paper-2);
+    background-image: repeating-linear-gradient(
+      -45deg,
+      transparent 0 11px,
+      rgb(27 26 23 / 0.05) 11px 12px
+    );
+  }
+}

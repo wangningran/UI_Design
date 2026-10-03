@@ -1,6 +1,6 @@
-// Renders a product/editorial image, or a labelled placeholder while no
-// photography has been supplied. Keeps the aspect ratio so layout never shifts.
-export default function ImageSlot({ src, alt = '', ratio = '4 / 5', label = 'Product image', className = '' }) {
+// Renders a product/editorial image, custom artwork (children), or a labelled
+// placeholder while no photography has been supplied. Keeps the aspect ratio so layout never shifts.
+export default function ImageSlot({ src, alt = '', ratio = '4 / 5', label = 'Product image', className = '', children }) {
   return (
     <div className={`relative w-full overflow-hidden ${className}`} style={{ aspectRatio: ratio }}>
       {src ? (
@@ -10,6 +10,8 @@ export default function ImageSlot({ src, alt = '', ratio = '4 / 5', label = 'Pro
           loading="lazy"
           className="absolute inset-0 h-full w-full object-cover transition-transform duration-[1.2s] ease-soft group-hover:scale-[1.03]"
         />
+      ) : children ? (
+        children
       ) : (
         <div className="placeholder-hatch absolute inset-0 flex items-center justify-center">
           <span className="eyebrow text-muted">

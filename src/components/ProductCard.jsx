@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import ImageSlot from './ImageSlot'
+import ProductArt from './ProductArt'
 import { PlusIcon } from './Icons'
 import { colors as palette } from '../data/products'
 
@@ -21,10 +22,20 @@ export default function ProductCard({ product, onAdd }) {
   return (
     <article className="group" onMouseEnter={() => setHover(true)} onMouseLeave={() => setHover(false)}>
       <a href="#" className="relative block overflow-hidden rounded-xl">
-        <ImageSlot src={primary} alt={product.name} />
-        {/* Hover image slot — crossfades in when a second image exists */}
-        <div className={`absolute inset-0 transition-opacity duration-700 ease-soft ${hover && secondary ? 'opacity-100' : 'opacity-0'}`}>
-          {secondary && <ImageSlot src={secondary} alt="" />}
+        <ImageSlot src={primary} alt={product.name}>
+          <ProductArt art={product.art} colour={colour} />
+        </ImageSlot>
+        {/* Hover image — second photo, or a close-up of the mock-up */}
+        <div className={`absolute inset-0 transition-opacity duration-700 ease-soft ${hover ? 'opacity-100' : 'opacity-0'}`}>
+          {secondary ? (
+            <ImageSlot src={secondary} alt="" />
+          ) : (
+            !primary && (
+              <ImageSlot>
+                <ProductArt art={product.art} colour={colour} detail />
+              </ImageSlot>
+            )
+          )}
         </div>
 
         {product.badge && (

@@ -1,4 +1,5 @@
 import ImageSlot from './ImageSlot'
+import ProductArt from './ProductArt'
 
 const stats = [
   ['600D', 'Recycled tour nylon'],
@@ -11,7 +12,9 @@ export default function StorySplit() {
   return (
     <section className="container-x pb-20 lg:pb-28">
       <div className="grid overflow-hidden rounded-2xl bg-paper-2 lg:grid-cols-2">
-        <ImageSlot ratio="1 / 1" label="Craft image" />
+        <ImageSlot ratio="1 / 1" label="Craft image">
+          <ProductArt art="driver" colour="Fairway" detail />
+        </ImageSlot>
         <div className="flex flex-col justify-center gap-8 px-6 py-14 lg:px-16">
           <p className="eyebrow text-muted">Built for the tour, made for you</p>
           <h2 className="display max-w-lg text-[clamp(2rem,3.6vw,3.4rem)]">Engineered down to the stitch.</h2>

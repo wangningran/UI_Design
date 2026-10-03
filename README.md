@@ -26,7 +26,8 @@ npm run dev
 |---|---|
 | `src/index.css` | Design tokens (Sunset Coral) — re-skin here |
 | `src/data/products.js` | Placeholder catalogue; `images: []` is where product photos go |
-| `src/components/ImageSlot.jsx` | Renders an image, or a hatched placeholder with its aspect ratio |
+| `src/components/ImageSlot.jsx` | Renders an image, custom artwork, or a hatched placeholder |
+| `src/components/ProductArt.jsx` | Vector mock-ups of each product, recoloured per colourway |
 | `src/components/Header.jsx` | Announcement bar, sticky header, mobile menu |
 | `src/components/CollectionHero.jsx` | Breadcrumb + oversized collection title |
 | `src/components/Toolbar.jsx` | Sticky category tabs, grid density, sort, filter trigger |
@@ -46,4 +47,6 @@ Put files in `public/products/` and reference them in `src/data/products.js`:
 images: ['/products/driver-cover-front.jpg', '/products/driver-cover-back.jpg']
 ```
 
-The first image is the primary, the second crossfades in on hover. Placeholders use a 4:5 ratio.
+The first image is the primary, the second crossfades in on hover (4:5 ratio). Until photos are
+added, each card shows a vector mock-up from `ProductArt.jsx` (keyed by `art` in the data) that
+recolours with the selected swatch and zooms to a close-up on hover.

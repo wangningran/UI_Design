@@ -1,4 +1,5 @@
 import ImageSlot from './ImageSlot'
+import ProductArt from './ProductArt'
 import { ArrowIcon } from './Icons'
 
 // A story tile that interrupts the product grid.
@@ -6,7 +7,9 @@ export default function EditorialTile({ className = '' }) {
   return (
     <a href="#" className={`group relative block overflow-hidden rounded-xl bg-night text-paper ${className}`}>
       <div className="grid h-full md:grid-cols-2">
-        <ImageSlot ratio="4 / 5" label="Lifestyle image" className="opacity-80 max-md:aspect-[16/10]! md:h-full" />
+        <ImageSlot ratio="4 / 5" label="Lifestyle image" className="max-md:aspect-[16/10]! md:h-full">
+          <ProductArt art="standbag" colour="White" bg="var(--accent)" />
+        </ImageSlot>
         <div className="flex flex-col justify-between gap-10 p-6 lg:p-10">
           <span className="eyebrow self-start rounded-full bg-accent px-2.5 py-1 text-on-accent">The Journal</span>
           <div>

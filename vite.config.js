@@ -10,6 +10,7 @@ export default defineConfig({
       input: {
         main: resolve(import.meta.dirname, 'index.html'),
         logos: resolve(import.meta.dirname, 'logos.html'),
+        social: resolve(import.meta.dirname, 'social.html'),
       },
     },
   },

@@ -5,14 +5,14 @@ const ACCENT = 'var(--accent)'
 
 /* ---------- 01 · Ball O — wordmark, the O of DIVOT is a golf ball ---------- */
 
-export function Ball({ className = '' }) {
+export function Ball({ className = '', fill = ACCENT }) {
   return (
     <span
       className={`inline-block shrink-0 rounded-full ${className}`}
       style={{
         width: '0.74em',
         height: '0.74em',
-        backgroundColor: ACCENT,
+        backgroundColor: fill,
         // highlight + dimple texture
         backgroundImage:
           'radial-gradient(circle at 34% 30%, rgb(255 255 255 / 0.4) 0 16%, transparent 17%), radial-gradient(circle, rgb(0 0 0 / 0.13) 0.04em, transparent 0.045em)',

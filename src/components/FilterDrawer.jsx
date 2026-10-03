@@ -1,12 +1,14 @@
 import { useEffect, useState } from 'react'
 import { CloseIcon, PlusIcon } from './Icons'
-import { colors, sizes } from '../data/products'
+import { colors } from '../data/products'
 
 export const priceRanges = [
-  { id: 'u75', label: 'Under $75', test: (p) => p < 75 },
-  { id: '75-150', label: '$75 – $150', test: (p) => p >= 75 && p <= 150 },
-  { id: 'o150', label: 'Over $150', test: (p) => p > 150 },
+  { id: 'u50', label: 'Under $50', test: (p) => p < 50 },
+  { id: '50-100', label: '$50 – $100', test: (p) => p >= 50 && p <= 100 },
+  { id: 'o100', label: 'Over $100', test: (p) => p > 100 },
 ]
+
+export const emptyFilters = { colors: [], prices: [] }
 
 function Section({ title, children, defaultOpen = true }) {
   const [open, setOpen] = useState(defaultOpen)
@@ -42,42 +44,25 @@ export default function FilterDrawer({ open, onClose, filters, onChange, resultC
         }`}
       >
         <div className="flex h-16 items-center justify-between border-b border-line px-6">
-          <h2 className="font-serif text-2xl">Filter</h2>
+          <h2 className="display text-xl">Filter</h2>
           <button aria-label="Close filters" onClick={onClose}><CloseIcon /></button>
         </div>
 
         <div className="flex-1 overflow-y-auto px-6">
-          <Section title="Size">
-            <div className="grid grid-cols-5 gap-2">
-              {sizes.map((s) => (
-                <button
-                  key={s}
-                  onClick={() => onChange({ ...filters, sizes: toggle(filters.sizes, s) })}
-                  className={`border py-2.5 text-[13px] transition-colors ${
-                    filters.sizes.includes(s) ? 'border-ink bg-ink text-paper' : 'border-line hover:border-ink'
-                  }`}
-                >
-                  {s}
-                </button>
-              ))}
-            </div>
-          </Section>
-
           <Section title="Colour">
-            <div className="flex flex-wrap gap-x-5 gap-y-3">
+            <div className="flex flex-wrap gap-2">
               {colors.map((c) => {
                 const on = filters.colors.includes(c.name)
                 return (
                   <button
                     key={c.name}
                     onClick={() => onChange({ ...filters, colors: toggle(filters.colors, c.name) })}
-                    className="flex items-center gap-2 text-[13px]"
+                    className={`flex items-center gap-2 rounded-full border py-1.5 pl-1.5 pr-3.5 text-[13px] transition-colors ${
+                      on ? 'border-ink bg-ink text-paper' : 'border-line hover:border-ink'
+                    }`}
                   >
-                    <span
-                      className={`h-5 w-5 rounded-full ring-1 ring-offset-2 ring-offset-paper transition-all ${on ? 'ring-ink' : 'ring-ink/15'}`}
-                      style={{ background: c.hex }}
-                    />
-                    <span className={on ? 'text-ink' : 'text-ink-2'}>{c.name}</span>
+                    <span className="h-5 w-5 rounded-full ring-1 ring-ink/15" style={{ background: c.hex }} />
+                    {c.name}
                   </button>
                 )
               })}
@@ -85,32 +70,28 @@ export default function FilterDrawer({ open, onClose, filters, onChange, resultC
           </Section>
 
           <Section title="Price">
-            <div className="space-y-3">
-              {priceRanges.map((r) => (
-                <label key={r.id} className="flex cursor-pointer items-center gap-3 text-[14px]">
-                  <input
-                    type="checkbox"
-                    checked={filters.prices.includes(r.id)}
-                    onChange={() => onChange({ ...filters, prices: toggle(filters.prices, r.id) })}
-                    className="h-4 w-4 accent-ink"
-                  />
-                  {r.label}
-                </label>
-              ))}
+            <div className="flex flex-wrap gap-2">
+              {priceRanges.map((r) => {
+                const on = filters.prices.includes(r.id)
+                return (
+                  <button
+                    key={r.id}
+                    onClick={() => onChange({ ...filters, prices: toggle(filters.prices, r.id) })}
+                    className={`rounded-full border px-4 py-2 text-[13px] transition-colors ${
+                      on ? 'border-ink bg-ink text-paper' : 'border-line hover:border-ink'
+                    }`}
+                  >
+                    {r.label}
+                  </button>
+                )
+              })}
             </div>
           </Section>
         </div>
 
         <div className="grid grid-cols-2 gap-3 border-t border-line p-6">
-          <button
-            onClick={() => onChange({ sizes: [], colors: [], prices: [] })}
-            className="eyebrow border border-line py-3.5 transition-colors hover:border-ink"
-          >
-            Clear all
-          </button>
-          <button onClick={onClose} className="eyebrow bg-ink py-3.5 text-paper transition-colors hover:bg-accent">
-            Show {resultCount} items
-          </button>
+          <button onClick={() => onChange(emptyFilters)} className="btn-outline">Clear all</button>
+          <button onClick={onClose} className="btn-solid">Show {resultCount} items</button>
         </div>
       </aside>
     </div>

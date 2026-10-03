@@ -1,21 +1,61 @@
 @import "tailwindcss";
 
 /*
- * Design tokens — change these to re-skin the whole template.
- * Palette: warm paper + near-black ink (Aesop / Tracksmith),
- * a single accent (oxblood), hairline rules instead of shadows.
+ * Design tokens — premium sport, youthful palette.
+ * Each palette is a set of CSS variables; utilities (bg-paper, text-accent…)
+ * read them, so switching data-theme on <html> re-skins the whole site.
  */
-@theme {
-  --color-paper: #f3efe6;
-  --color-paper-2: #ebe5d8;
-  --color-ink: #1b1a17;
-  --color-ink-2: #3a3833;
-  --color-muted: #77726a;
-  --color-line: #d6cfbf;
-  --color-accent: #7a2e1f;
-  --color-night: #141412;
+:root,
+[data-theme="fairway"] {
+  --paper: #f6f7f2;     /* page background */
+  --paper-2: #e9ede3;   /* surfaces, image wells */
+  --ink: #0d1a13;       /* primary text */
+  --ink-2: #33423a;
+  --muted: #6c7a70;
+  --line: #d5dccf;
+  --accent: #d4ff3a;    /* neon lime — used as fill, never as text on light bg */
+  --on-accent: #0d1a13;
+  --night: #0f3d2e;     /* deep fairway green sections */
+}
 
-  --font-serif: "Fraunces", Georgia, serif;
+[data-theme="sky"] {
+  --paper: #f5f8fb;
+  --paper-2: #e6edf4;
+  --ink: #0b1b2b;
+  --ink-2: #2c3e50;
+  --muted: #6a7a8a;
+  --line: #d3dde7;
+  --accent: #7cc8ff;
+  --on-accent: #0b1b2b;
+  --night: #0f2a44;
+}
+
+[data-theme="coral"] {
+  --paper: #faf7f2;
+  --paper-2: #f0ebe2;
+  --ink: #18201b;
+  --ink-2: #3a433d;
+  --muted: #7b7f78;
+  --line: #e2dccf;
+  --accent: #ff6b4a;
+  --on-accent: #18201b;
+  --night: #1f4d3a;
+}
+
+@theme inline {
+  --color-paper: var(--paper);
+  --color-paper-2: var(--paper-2);
+  --color-ink: var(--ink);
+  --color-ink-2: var(--ink-2);
+  --color-muted: var(--muted);
+  --color-line: var(--line);
+  --color-accent: var(--accent);
+  --color-on-accent: var(--on-accent);
+  --color-night: var(--night);
+}
+
+@theme {
+  --font-display: "Archivo", ui-sans-serif, system-ui, sans-serif;
   --font-sans: "Inter Tight", ui-sans-serif, system-ui, sans-serif;
   --font-mono: "JetBrains Mono", ui-monospace, monospace;
 
@@ -28,14 +68,24 @@
   }
   body {
     @apply bg-paper text-ink font-sans;
+    transition: background-color 0.5s var(--ease-soft), color 0.5s var(--ease-soft);
   }
   ::selection {
-    @apply bg-ink text-paper;
+    @apply bg-accent text-on-accent;
   }
 }
 
 @layer components {
-  /* Small, tracked, uppercase label — the Satisfy-style counterpoint to big serif headlines */
+  /* Expanded, heavy, uppercase — the athletic headline voice */
+  .display {
+    font-family: var(--font-display);
+    font-stretch: 115%;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: -0.02em;
+    line-height: 0.9;
+  }
+  /* Small, tracked, uppercase label */
   .eyebrow {
     @apply font-mono text-[11px] uppercase tracking-[0.14em];
   }
@@ -49,13 +99,44 @@
   .link-underline:hover {
     background-size: 100% 1px;
   }
-  /* Image placeholder: hatched paper, until real product photography is supplied */
+  /* Image placeholder until real product photography is supplied */
   .placeholder-hatch {
-    background-color: var(--color-paper-2);
+    background-color: var(--paper-2);
     background-image: repeating-linear-gradient(
       -45deg,
       transparent 0 11px,
-      rgb(27 26 23 / 0.05) 11px 12px
+      color-mix(in srgb, var(--ink) 5%, transparent) 11px 12px
     );
+  }
+}
+
+/* Pill button with an accent fill on hover */
+@utility btn {
+  @apply relative inline-flex items-center justify-center gap-2 overflow-hidden rounded-full px-6 py-3 font-mono text-[11px] uppercase tracking-[0.14em] transition-colors duration-300;
+}
+@utility btn-solid {
+  @apply btn bg-ink text-paper hover:bg-accent hover:text-on-accent;
+}
+@utility btn-outline {
+  @apply btn border border-ink hover:bg-ink hover:text-paper;
+}
+
+@keyframes marquee {
+  to {
+    transform: translateX(-50%);
+  }
+}
+.animate-marquee {
+  animation: marquee 32s linear infinite;
+}
+@media (prefers-reduced-motion: reduce) {
+  .animate-marquee {
+    animation: none;
+  }
+}
+
+@keyframes pop {
+  50% {
+    transform: scale(1.35);
   }
 }

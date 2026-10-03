@@ -1,7 +1,8 @@
 import { useEffect, useState } from 'react'
+import Logo from './Logo'
 import { BagIcon, CloseIcon, MenuIcon, SearchIcon, UserIcon } from './Icons'
 
-const nav = ['Shop', 'New Arrivals', 'Collections', 'Journal', 'Stores']
+const nav = ['Shop', 'New In', 'Headcovers', 'Journal', 'Clubhouse']
 
 export default function Header({ cartCount }) {
   const [scrolled, setScrolled] = useState(false)
@@ -18,7 +19,7 @@ export default function Header({ cartCount }) {
     <>
       <div className="bg-night text-paper">
         <p className="container-x eyebrow py-2 text-center text-paper/80">
-          Complimentary shipping on orders over $150 · Free returns within 30 days
+          Free shipping over $100 · <span className="text-accent">New season headcovers just dropped</span>
         </p>
       </div>
 
@@ -39,8 +40,8 @@ export default function Header({ cartCount }) {
             <MenuIcon />
           </button>
 
-          <a href="#" className="font-serif text-2xl tracking-tight">
-            Studio<span className="text-accent">.</span>
+          <a href="#" aria-label="Studio Golf home">
+            <Logo className="text-lg" />
           </a>
 
           <div className="flex items-center justify-end gap-5">
@@ -48,7 +49,14 @@ export default function Header({ cartCount }) {
             <button aria-label="Account" className="hidden sm:block hover:text-accent transition-colors"><UserIcon /></button>
             <button aria-label="Bag" className="relative flex items-center gap-1.5 hover:text-accent transition-colors">
               <BagIcon />
-              <span className="font-mono text-[11px] tabular-nums">({cartCount})</span>
+              <span
+                key={cartCount}
+                className={`flex h-5 min-w-5 items-center justify-center rounded-full px-1 font-mono text-[10px] tabular-nums ${
+                  cartCount ? 'animate-[pop_0.4s_var(--ease-soft)] bg-accent text-on-accent' : 'bg-paper-2'
+                }`}
+              >
+                {cartCount}
+              </span>
             </button>
           </div>
         </div>
@@ -68,7 +76,7 @@ export default function Header({ cartCount }) {
           <button aria-label="Close menu" onClick={() => setOpen(false)}><CloseIcon /></button>
           <ul className="mt-10 space-y-5">
             {nav.map((item) => (
-              <li key={item}><a href="#" className="font-serif text-3xl">{item}</a></li>
+              <li key={item}><a href="#" className="display text-3xl">{item}</a></li>
             ))}
           </ul>
         </div>

@@ -1,21 +1,26 @@
 import { useState } from 'react'
 import ImageSlot from './ImageSlot'
+import { PlusIcon } from './Icons'
 import { colors as palette } from '../data/products'
+
+const hexOf = (name) => palette.find((c) => c.name === name)?.hex
 
 export default function ProductCard({ product, onAdd }) {
   const [hover, setHover] = useState(false)
-  const [added, setAdded] = useState(null)
+  const [colour, setColour] = useState(product.colors[0])
+  const [added, setAdded] = useState(false)
   const [primary, secondary] = product.images
 
-  const add = (size) => {
-    onAdd(product, size)
-    setAdded(size)
-    setTimeout(() => setAdded(null), 1400)
+  const add = (e) => {
+    e.preventDefault()
+    onAdd(product, colour)
+    setAdded(true)
+    setTimeout(() => setAdded(false), 1400)
   }
 
   return (
     <article className="group" onMouseEnter={() => setHover(true)} onMouseLeave={() => setHover(false)}>
-      <a href="#" className="relative block">
+      <a href="#" className="relative block overflow-hidden rounded-xl">
         <ImageSlot src={primary} alt={product.name} />
         {/* Hover image slot — crossfades in when a second image exists */}
         <div className={`absolute inset-0 transition-opacity duration-700 ease-soft ${hover && secondary ? 'opacity-100' : 'opacity-0'}`}>
@@ -23,54 +28,55 @@ export default function ProductCard({ product, onAdd }) {
         </div>
 
         {product.badge && (
-          <span className={`eyebrow absolute left-3 top-3 px-2 py-1 ${product.badge === 'Limited' ? 'bg-accent text-paper' : 'bg-paper text-ink'}`}>
+          <span
+            className={`eyebrow absolute left-3 top-3 rounded-full px-2.5 py-1 ${
+              product.badge === 'Limited' ? 'bg-ink text-paper' : 'bg-accent text-on-accent'
+            }`}
+          >
             {product.badge}
           </span>
         )}
 
-        {/* Quick add — slides up on hover (desktop) */}
-        <div
-          className="absolute inset-x-3 bottom-3 translate-y-2 bg-paper/95 p-3 opacity-0 backdrop-blur transition-all duration-500 ease-soft group-hover:translate-y-0 group-hover:opacity-100 max-lg:hidden"
-          onClick={(e) => e.preventDefault()}
+        {/* Quick add — one-tap add of the selected colourway */}
+        <button
+          onClick={add}
+          aria-label={`Add ${product.name} to bag`}
+          className={`absolute bottom-3 right-3 flex h-11 items-center gap-2 overflow-hidden rounded-full pl-3.5 pr-3.5 transition-all duration-500 ease-soft ${
+            added ? 'bg-accent text-on-accent' : 'bg-paper text-ink hover:bg-ink hover:text-paper'
+          } lg:translate-y-2 lg:opacity-0 lg:group-hover:translate-y-0 lg:group-hover:opacity-100`}
         >
-          <p className="eyebrow mb-2 text-muted">{added ? `Added — ${added}` : 'Quick add'}</p>
-          <div className="flex flex-wrap gap-1.5">
-            {product.sizes.map((s) => (
-              <button
-                key={s}
-                onClick={() => add(s)}
-                className={`min-w-9 border px-2 py-1.5 text-[12px] transition-colors ${
-                  added === s ? 'border-ink bg-ink text-paper' : 'border-line hover:border-ink'
-                }`}
-              >
-                {s}
-              </button>
-            ))}
-          </div>
-        </div>
+          <PlusIcon className={`shrink-0 transition-transform duration-500 ${added ? 'rotate-45' : ''}`} />
+          <span className="eyebrow max-w-0 overflow-hidden whitespace-nowrap transition-all duration-500 ease-soft group-hover:max-w-28">
+            {added ? 'Added' : 'Add to bag'}
+          </span>
+        </button>
       </a>
 
-      <div className="mt-3.5 flex items-start justify-between gap-4">
+      <div className="mt-4 flex items-start justify-between gap-4">
         <div>
-          <h3 className="text-[14px] leading-snug">
+          <p className="eyebrow text-muted">{product.category}</p>
+          <h3 className="mt-1.5 text-[15px] font-medium leading-snug">
             <a href="#" className="link-underline">{product.name}</a>
           </h3>
-          <p className="mt-1 text-[13px] text-muted">
-            {product.colors.length} {product.colors.length === 1 ? 'colour' : 'colours'}
-          </p>
         </div>
-        <p className="text-[14px] tabular-nums">${product.price}</p>
+        <p className="text-[15px] font-medium tabular-nums">${product.price}</p>
       </div>
 
-      <div className="mt-2.5 flex gap-1.5">
+      {/* Selectable colourways */}
+      <div className="mt-3 flex items-center gap-2">
         {product.colors.map((name) => (
-          <span
+          <button
             key={name}
             title={name}
-            className="h-3 w-3 rounded-full ring-1 ring-ink/15 ring-offset-1 ring-offset-paper"
-            style={{ background: palette.find((c) => c.name === name)?.hex }}
+            aria-label={name}
+            onClick={() => setColour(name)}
+            className={`h-4 w-4 rounded-full ring-offset-2 ring-offset-paper transition-all duration-300 ${
+              colour === name ? 'ring-[1.5px] ring-ink' : 'ring-1 ring-ink/15 hover:ring-ink/40'
+            }`}
+            style={{ background: hexOf(name) }}
           />
         ))}
+        <span className="ml-1 text-[12px] text-muted">{colour}</span>
       </div>
     </article>
   )

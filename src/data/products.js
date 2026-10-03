@@ -1,35 +1,36 @@
-// Placeholder catalogue. `images` is intentionally empty — supply real
-// product photography later (first = primary, second = hover image).
+// Placeholder golf-accessory catalogue. No sizes — accessories are one size.
+// `images` is intentionally empty: supply real photography later
+// (first = primary, second = hover image).
 
-export const categories = ['All', 'Tops', 'Bottoms', 'Outerwear', 'Accessories']
+export const categories = ['All', 'Headcovers', 'Headwear', 'Bags', 'Balls & Tees', 'On-Course']
 
-export const sizes = ['XS', 'S', 'M', 'L', 'XL']
-
+// Product colourways (fixed — independent of the site palette)
 export const colors = [
-  { name: 'Ink', hex: '#1b1a17' },
-  { name: 'Bone', hex: '#e7e0d0' },
-  { name: 'Oxblood', hex: '#7a2e1f' },
-  { name: 'Moss', hex: '#5b6148' },
-  { name: 'Slate', hex: '#5d6670' },
+  { name: 'Fairway', hex: '#1f5a3d' },
+  { name: 'White', hex: '#f4f4ef' },
+  { name: 'Navy', hex: '#1a2a44' },
+  { name: 'Lime', hex: '#cdf03a' },
+  { name: 'Coral', hex: '#ff7a5c' },
+  { name: 'Sky', hex: '#8fcdf5' },
 ]
 
 const base = [
-  ['Distance Singlet', 'Tops', 68, ['Ink', 'Bone'], 'New'],
-  ['Long Run Tee', 'Tops', 82, ['Bone', 'Slate', 'Moss']],
-  ['Tempo Short 5"', 'Bottoms', 88, ['Ink', 'Oxblood'], 'New'],
-  ['Merino Half Zip', 'Tops', 165, ['Moss', 'Ink']],
-  ['Shell Jacket', 'Outerwear', 245, ['Slate', 'Ink'], 'Limited'],
-  ['Race Tight', 'Bottoms', 120, ['Ink']],
-  ['Lightweight Cap', 'Accessories', 42, ['Bone', 'Ink', 'Oxblood']],
-  ['Trail Short 7"', 'Bottoms', 95, ['Moss', 'Slate']],
-  ['Thermal Long Sleeve', 'Tops', 110, ['Oxblood', 'Bone']],
-  ['Packable Vest', 'Outerwear', 180, ['Ink', 'Moss'], 'New'],
-  ['Running Sock — 3 Pack', 'Accessories', 36, ['Bone', 'Ink']],
-  ['Track Pant', 'Bottoms', 140, ['Slate', 'Ink']],
-  ['Mesh Tank', 'Tops', 64, ['Bone']],
-  ['Winter Gloves', 'Accessories', 48, ['Ink']],
-  ['Rain Anorak', 'Outerwear', 265, ['Oxblood', 'Slate']],
-  ['Split Short 3"', 'Bottoms', 78, ['Ink', 'Bone'], 'Limited'],
+  ['Driver Headcover', 'Headcovers', 85, ['Fairway', 'White', 'Coral'], 'New'],
+  ['Fairway Wood Headcover', 'Headcovers', 75, ['Fairway', 'Navy']],
+  ['Blade Putter Cover', 'Headcovers', 65, ['White', 'Lime'], 'Limited'],
+  ['Tour Cap', 'Headwear', 42, ['White', 'Navy', 'Sky', 'Lime']],
+  ['Mallet Putter Cover', 'Headcovers', 70, ['Navy', 'Coral']],
+  ['Stand Bag', 'Bags', 340, ['White', 'Fairway'], 'New'],
+  ['Caddie Towel', 'On-Course', 38, ['Fairway', 'White', 'Sky']],
+  ['Tour Ball — Dozen', 'Balls & Tees', 54, ['White', 'Lime']],
+  ['Bucket Hat', 'Headwear', 48, ['Sky', 'White']],
+  ['Sunday Carry Bag', 'Bags', 220, ['Navy', 'Coral'], 'Limited'],
+  ['Ball Marker Set', 'On-Course', 28, ['Fairway', 'Coral']],
+  ['Wooden Tee Pack', 'Balls & Tees', 14, ['White', 'Lime', 'Coral']],
+  ['Iron Cover Set', 'Headcovers', 95, ['Fairway', 'White']],
+  ['Performance Visor', 'Headwear', 36, ['White', 'Navy'], 'New'],
+  ['Divot Repair Tool', 'On-Course', 32, ['Navy', 'Lime']],
+  ['Valuables Pouch', 'Bags', 45, ['Fairway', 'Sky']],
 ]
 
 export const products = base.map(([name, category, price, colorNames, badge], i) => ({
@@ -38,7 +39,6 @@ export const products = base.map(([name, category, price, colorNames, badge], i)
   category,
   price,
   colors: colorNames,
-  sizes: category === 'Accessories' ? ['One Size'] : sizes,
   badge: badge ?? null,
   images: [],
   order: i,

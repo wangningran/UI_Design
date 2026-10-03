@@ -57,8 +57,13 @@ export default function Toolbar({ category, onCategory, sort, onSort, cols, onCo
           </select>
         </label>
 
-        <button onClick={onOpenFilters} className="eyebrow flex items-center gap-2 border border-ink px-3 py-2 transition-colors hover:bg-ink hover:text-paper">
-          Filter{activeFilterCount > 0 && <span className="tabular-nums">({activeFilterCount})</span>}
+        <button onClick={onOpenFilters} className="btn-outline px-4 py-2">
+          Filter
+          {activeFilterCount > 0 && (
+            <span className="flex h-4 min-w-4 items-center justify-center rounded-full bg-accent px-1 text-[10px] text-on-accent">
+              {activeFilterCount}
+            </span>
+          )}
         </button>
       </div>
     </div>

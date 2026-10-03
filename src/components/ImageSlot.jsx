@@ -4,7 +4,12 @@ export default function ImageSlot({ src, alt = '', ratio = '4 / 5', label = 'Pro
   return (
     <div className={`relative w-full overflow-hidden ${className}`} style={{ aspectRatio: ratio }}>
       {src ? (
-        <img src={src} alt={alt} loading="lazy" className="absolute inset-0 h-full w-full object-cover" />
+        <img
+          src={src}
+          alt={alt}
+          loading="lazy"
+          className="absolute inset-0 h-full w-full object-cover transition-transform duration-[1.2s] ease-soft group-hover:scale-[1.03]"
+        />
       ) : (
         <div className="placeholder-hatch absolute inset-0 flex items-center justify-center">
           <span className="eyebrow text-muted">

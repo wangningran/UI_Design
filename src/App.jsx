@@ -4,7 +4,9 @@ import CollectionHero from './components/CollectionHero'
 import Toolbar from './components/Toolbar'
 import ProductCard from './components/ProductCard'
 import EditorialTile from './components/EditorialTile'
-import FilterDrawer, { priceRanges } from './components/FilterDrawer'
+import FilterDrawer, { emptyFilters, priceRanges } from './components/FilterDrawer'
+import Marquee from './components/Marquee'
+import ThemeSwitcher from './components/ThemeSwitcher'
 import StorySplit from './components/StorySplit'
 import Newsletter from './components/Newsletter'
 import Footer from './components/Footer'
@@ -17,7 +19,7 @@ export default function App() {
   const [category, setCategory] = useState('All')
   const [sort, setSort] = useState('featured')
   const [cols, setCols] = useState(4)
-  const [filters, setFilters] = useState({ sizes: [], colors: [], prices: [] })
+  const [filters, setFilters] = useState(emptyFilters)
   const [drawerOpen, setDrawerOpen] = useState(false)
   const [visible, setVisible] = useState(PAGE_SIZE)
   const [cart, setCart] = useState([])
@@ -26,7 +28,6 @@ export default function App() {
   const results = useMemo(() => {
     const list = products.filter((p) => {
       if (category !== 'All' && p.category !== category) return false
-      if (filters.sizes.length && !p.sizes.some((s) => filters.sizes.includes(s))) return false
       if (filters.colors.length && !p.colors.some((c) => filters.colors.includes(c))) return false
       if (filters.prices.length && !priceRanges.some((r) => filters.prices.includes(r.id) && r.test(p.price))) return false
       return true
@@ -40,14 +41,14 @@ export default function App() {
     return [...list].sort(sorters[sort])
   }, [category, filters, sort])
 
-  const activeFilterCount = filters.sizes.length + filters.colors.length + filters.prices.length
+  const activeFilterCount = filters.colors.length + filters.prices.length
   const shown = results.slice(0, visible)
   // Place the story tile so it completes the second row at the chosen density.
   const editorialAt = cols === 2 ? 4 : cols * 2 - 2
 
-  const addToCart = (product, size) => {
-    setCart((c) => [...c, { id: product.id, size }])
-    setToast(`${product.name} — ${size}`)
+  const addToCart = (product, colour) => {
+    setCart((c) => [...c, { id: product.id, colour }])
+    setToast(`${product.name} — ${colour}`)
     setTimeout(() => setToast(null), 2200)
   }
 
@@ -64,6 +65,7 @@ export default function App() {
 
       <main>
         <CollectionHero count={products.length} />
+        <Marquee />
 
         <Toolbar
           category={category}
@@ -80,11 +82,8 @@ export default function App() {
         <section className="container-x py-10 lg:py-14">
           {results.length === 0 ? (
             <div className="py-32 text-center">
-              <p className="font-serif text-3xl">Nothing matches — yet.</p>
-              <button
-                onClick={() => setFilters({ sizes: [], colors: [], prices: [] })}
-                className="eyebrow link-underline mt-6 pb-1"
-              >
+              <p className="display text-3xl">Nothing matches — yet.</p>
+              <button onClick={() => setFilters(emptyFilters)} className="btn-outline mt-6">
                 Clear filters
               </button>
             </div>
@@ -108,10 +107,7 @@ export default function App() {
                 <div className="h-px bg-ink transition-all duration-700 ease-soft" style={{ width: `${(shown.length / results.length) * 100}%` }} />
               </div>
               {shown.length < results.length && (
-                <button
-                  onClick={() => setVisible((v) => v + PAGE_SIZE)}
-                  className="eyebrow mt-2 border border-ink px-8 py-3.5 transition-colors hover:bg-ink hover:text-paper"
-                >
+                <button onClick={() => setVisible((v) => v + PAGE_SIZE)} className="btn-outline mt-2 px-8">
                   Load more
                 </button>
               )}
@@ -124,6 +120,7 @@ export default function App() {
       </main>
 
       <Footer />
+      <ThemeSwitcher />
 
       <FilterDrawer
         open={drawerOpen}
@@ -136,11 +133,12 @@ export default function App() {
       {/* Add-to-bag toast */}
       <div
         role="status"
-        className={`fixed bottom-6 left-1/2 z-50 -translate-x-1/2 bg-ink px-5 py-3 text-paper transition-all duration-500 ease-soft ${
+        className={`fixed bottom-6 left-1/2 z-50 flex -translate-x-1/2 items-center gap-2.5 rounded-full bg-ink px-5 py-3 text-paper transition-all duration-500 ease-soft ${
           toast ? 'translate-y-0 opacity-100' : 'pointer-events-none translate-y-4 opacity-0'
         }`}
       >
-        <p className="eyebrow">Added to bag · {toast}</p>
+        <span className="h-2 w-2 rounded-full bg-accent" />
+        <p className="eyebrow whitespace-nowrap">Added to bag · {toast}</p>
       </div>
     </>
   )

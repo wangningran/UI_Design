@@ -1,8 +1,8 @@
 const columns = [
-  ['Shop', ['New Arrivals', 'Tops', 'Bottoms', 'Outerwear', 'Accessories']],
-  ['Help', ['Shipping', 'Returns', 'Size Guide', 'Contact']],
+  ['Shop', ['New In', 'Headcovers', 'Headwear', 'Bags', 'On-Course']],
+  ['Help', ['Shipping', 'Returns', 'Care Guide', 'Contact']],
   ['About', ['Our Story', 'Materials', 'Journal', 'Stores']],
-  ['Follow', ['Instagram', 'Strava', 'YouTube']],
+  ['Follow', ['Instagram', 'TikTok', 'YouTube']],
 ]
 
 export default function Footer() {
@@ -20,19 +20,20 @@ export default function Footer() {
           </div>
         ))}
         <div className="col-span-2 text-[14px] leading-relaxed text-ink-2">
-          <p className="eyebrow text-muted">Studio</p>
-          <p className="mt-4">Designed for the daily practice. Shipping worldwide from our studio.</p>
+          <p className="eyebrow text-muted">Studio Golf</p>
+          <p className="mt-4">Golf accessories with tour-grade build and a lot more colour. Shipping worldwide.</p>
         </div>
       </div>
 
-      {/* Oversized wordmark — Satisfy-style typographic sign-off */}
+      {/* Oversized wordmark sign-off */}
       <div className="container-x mt-20 overflow-hidden">
-        <p className="select-none font-serif text-[clamp(5rem,24vw,22rem)] font-light leading-[0.78] tracking-[-0.05em]">
-          Studio<span className="text-accent">.</span>
+        <p className="display flex select-none items-end gap-[0.04em] text-[clamp(4rem,17vw,17rem)] leading-[0.8]">
+          Studio
+          <span className="mb-[0.08em] inline-block h-[0.32em] w-[0.32em] shrink-0 rounded-full bg-accent" />
         </p>
       </div>
       <div className="container-x flex flex-wrap justify-between gap-4 border-t border-line py-6">
-        <p className="eyebrow text-muted">© {new Date().getFullYear()} Studio</p>
+        <p className="eyebrow text-muted">© {new Date().getFullYear()} Studio Golf</p>
         <p className="eyebrow text-muted">Privacy · Terms · Accessibility</p>
       </div>
     </footer>

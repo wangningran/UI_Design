@@ -6,7 +6,6 @@ import ProductCard from './components/ProductCard'
 import EditorialTile from './components/EditorialTile'
 import FilterDrawer, { emptyFilters, priceRanges } from './components/FilterDrawer'
 import Marquee from './components/Marquee'
-import ThemeSwitcher from './components/ThemeSwitcher'
 import StorySplit from './components/StorySplit'
 import Newsletter from './components/Newsletter'
 import Footer from './components/Footer'
@@ -120,7 +119,6 @@ export default function App() {
       </main>
 
       <Footer />
-      <ThemeSwitcher />
 
       <FilterDrawer
         open={drawerOpen}

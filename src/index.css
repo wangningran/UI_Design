@@ -1,45 +1,22 @@
 @import "tailwindcss";
+@import "@fontsource-variable/archivo/wdth.css";
+@import "@fontsource-variable/inter-tight";
+@import "@fontsource-variable/jetbrains-mono";
 
 /*
- * Design tokens — premium sport, youthful palette.
- * Each palette is a set of CSS variables; utilities (bg-paper, text-accent…)
- * read them, so switching data-theme on <html> re-skins the whole site.
+ * Design tokens — Divot & Co, "Sunset Coral" palette.
+ * Utilities (bg-paper, text-accent…) read these variables.
  */
-:root,
-[data-theme="fairway"] {
-  --paper: #f6f7f2;     /* page background */
-  --paper-2: #e9ede3;   /* surfaces, image wells */
-  --ink: #0d1a13;       /* primary text */
-  --ink-2: #33423a;
-  --muted: #6c7a70;
-  --line: #d5dccf;
-  --accent: #d4ff3a;    /* neon lime — used as fill, never as text on light bg */
-  --on-accent: #0d1a13;
-  --night: #0f3d2e;     /* deep fairway green sections */
-}
-
-[data-theme="sky"] {
-  --paper: #f5f8fb;
-  --paper-2: #e6edf4;
-  --ink: #0b1b2b;
-  --ink-2: #2c3e50;
-  --muted: #6a7a8a;
-  --line: #d3dde7;
-  --accent: #7cc8ff;
-  --on-accent: #0b1b2b;
-  --night: #0f2a44;
-}
-
-[data-theme="coral"] {
-  --paper: #faf7f2;
-  --paper-2: #f0ebe2;
-  --ink: #18201b;
+:root {
+  --paper: #faf7f2;     /* page background */
+  --paper-2: #f0ebe2;   /* surfaces, image wells */
+  --ink: #18201b;       /* primary text */
   --ink-2: #3a433d;
   --muted: #7b7f78;
   --line: #e2dccf;
-  --accent: #ff6b4a;
+  --accent: #ff6b4a;    /* coral */
   --on-accent: #18201b;
-  --night: #1f4d3a;
+  --night: #1f4d3a;     /* deep forest sections */
 }
 
 @theme inline {
@@ -55,9 +32,9 @@
 }
 
 @theme {
-  --font-display: "Archivo", ui-sans-serif, system-ui, sans-serif;
-  --font-sans: "Inter Tight", ui-sans-serif, system-ui, sans-serif;
-  --font-mono: "JetBrains Mono", ui-monospace, monospace;
+  --font-display: "Archivo Variable", ui-sans-serif, system-ui, sans-serif;
+  --font-sans: "Inter Tight Variable", ui-sans-serif, system-ui, sans-serif;
+  --font-mono: "JetBrains Mono Variable", ui-monospace, monospace;
 
   --ease-soft: cubic-bezier(0.22, 0.61, 0.36, 1);
 }

@@ -40,7 +40,7 @@ export default function Header({ cartCount }) {
             <MenuIcon />
           </button>
 
-          <a href="#" aria-label="Studio Golf home">
+          <a href="#" aria-label="Divot & Co home">
             <Logo className="text-lg" />
           </a>
 

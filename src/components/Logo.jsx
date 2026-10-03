@@ -1,9 +1,6 @@
+import { BallWordmark } from './brand/Marks'
+
+// Site logo — swap for another concept from ./brand/Marks once one is chosen.
 export default function Logo({ className = '' }) {
-  return (
-    <span className={`display inline-flex items-center gap-1.5 ${className}`}>
-      Studio
-      <span className="inline-block h-[0.42em] w-[0.42em] rounded-full bg-accent ring-1 ring-ink/10" />
-      Golf
-    </span>
-  )
+  return <BallWordmark className={className} />
 }

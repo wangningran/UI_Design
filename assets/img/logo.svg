@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="Divot &amp; Co">
+  <rect width="64" height="64" rx="14" fill="#1f3d2b"/>
+  <path d="M26 14v32" stroke="#f4efe4" stroke-width="3" stroke-linecap="round"/>
+  <path d="M27.5 15.5 42 21l-14.5 5.5z" fill="#d9a441"/>
+  <ellipse cx="32" cy="48" rx="16" ry="4.5" fill="#f4efe4" opacity=".9"/>
+  <ellipse cx="32" cy="47" rx="9" ry="2.2" fill="#1f3d2b"/>
+</svg>

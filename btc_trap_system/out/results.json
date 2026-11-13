@@ -1,0 +1,464 @@
+{
+ "date": "2026-11-13",
+ "price": 68342.0,
+ "snapshot": {
+  "dd_ath": {
+   "value": -0.4522,
+   "pctile": 40.1
+  },
+  "days_since_ath": {
+   "value": 403.0,
+   "pctile": 73.6
+  },
+  "days_since_halving": {
+   "value": 937.0,
+   "pctile": 69.6
+  },
+  "mayer": {
+   "value": 0.9357,
+   "pctile": 31.1
+  },
+  "p_200wma": {
+   "value": 1.0087,
+   "pctile": 10.9
+  },
+  "z_4y": {
+   "value": 0.3058,
+   "pctile": 6.3
+  },
+  "p_ma50": {
+   "value": -0.1514,
+   "pctile": 7.7
+  },
+  "p_ma200": {
+   "value": -0.0643,
+   "pctile": 31.1
+  },
+  "ma200_slope": {
+   "value": 0.0115,
+   "pctile": 35.6
+  },
+  "rsi_d": {
+   "value": 25.1141,
+   "pctile": 1.9
+  },
+  "rsi_w": {
+   "value": 47.7052,
+   "pctile": 36.0
+  },
+  "macd_w_hist": {
+   "value": 0.0085,
+   "pctile": 56.3
+  },
+  "roc30": {
+   "value": -0.1621,
+   "pctile": 12.2
+  },
+  "roc90": {
+   "value": 0.0844,
+   "pctile": 49.9
+  },
+  "vol30": {
+   "value": 0.3891,
+   "pctile": 22.8
+  },
+  "pos_55": {
+   "value": 0.015,
+   "pctile": 0.6
+  },
+  "pos_365": {
+   "value": 0.2519,
+   "pctile": 20.1
+  },
+  "vol_z": {
+   "value": 1.0288,
+   "pctile": 78.4
+  },
+  "low_wick": {
+   "value": 0.1809,
+   "pctile": 24.1
+  },
+  "swing_score": {
+   "value": 2.0,
+   "pctile": 59.7
+  },
+  "dxy_roc60": {
+   "value": 0.0399,
+   "pctile": 91.2
+  },
+  "us10y": {
+   "value": 5.154,
+   "pctile": 99.5
+  },
+  "us10y_chg90": {
+   "value": 0.458,
+   "pctile": 84.6
+  },
+  "us3m_chg90": {
+   "value": 0.425,
+   "pctile": 90.6
+  },
+  "curve": {
+   "value": 1.032,
+   "pctile": 56.3
+  },
+  "spx_p_ma200": {
+   "value": -0.0002,
+   "pctile": 20.7
+  },
+  "vix": {
+   "value": 19.3,
+   "pctile": 67.7
+  },
+  "hyg_roc60": {
+   "value": -0.0202,
+   "pctile": 18.2
+  },
+  "oil_roc90": {
+   "value": 0.0813,
+   "pctile": 66.5
+  },
+  "corr_spx90": {
+   "value": 0.4833,
+   "pctile": 86.9
+  },
+  "macro_score": {
+   "value": -1.1894,
+   "pctile": 7.3
+  },
+  "ethbtc_roc90": {
+   "value": -0.0549,
+   "pctile": 45.2
+  },
+  "mstr_btc_roc90": {
+   "value": 0.1063,
+   "pctile": 68.1
+  }
+ },
+ "cycle_analogs": {
+  "2013-17 (ATH 2013-11-30)": {
+   "bottom_day_after_ath": 410,
+   "bottom_dd": -0.843,
+   "dd_at_same_day": -0.74,
+   "ret_next_90d_from_same_day": -0.14,
+   "ret_next_365d_from_same_day": 0.556
+  },
+  "2017-21 (ATH 2017-12-17)": {
+   "bottom_day_after_ath": 363,
+   "bottom_dd": -0.831,
+   "dd_at_same_day": -0.812,
+   "ret_next_90d_from_same_day": 0.518,
+   "ret_next_365d_from_same_day": 1.345
+  },
+  "2021-25 (ATH 2021-11-09)": {
+   "bottom_day_after_ath": 377,
+   "bottom_dd": -0.764,
+   "dd_at_same_day": -0.749,
+   "ret_next_90d_from_same_day": 0.633,
+   "ret_next_365d_from_same_day": 1.463
+  }
+ },
+ "breakdown_events": {
+  "n": 24,
+  "base_bear_trap_rate": 0.375,
+  "median_r30": -0.023,
+  "median_r90": 0.034
+ },
+ "breakout_events": {
+  "n": 52,
+  "base_bull_trap_rate": 0.481
+ },
+ "conditional": [
+  {
+   "cond": "Mayer<1 (below 200DMA)",
+   "n": 17,
+   "bear_trap_rate": 0.353,
+   "median_r90": 0.064
+  },
+  {
+   "cond": "200DMA falling",
+   "n": 9,
+   "bear_trap_rate": 0.222,
+   "median_r90": -0.006
+  },
+  {
+   "cond": "macro headwind (score<0)",
+   "n": 14,
+   "bear_trap_rate": 0.214,
+   "median_r90": -0.019
+  },
+  {
+   "cond": "200DMA falling AND macro headwind",
+   "n": 9,
+   "bear_trap_rate": 0.222,
+   "median_r90": -0.006
+  },
+  {
+   "cond": "already >40% below ATH",
+   "n": 16,
+   "bear_trap_rate": 0.375,
+   "median_r90": 0.058
+  },
+  {
+   "cond": ">40% below ATH AND macro headwind",
+   "n": 9,
+   "bear_trap_rate": 0.222,
+   "median_r90": -0.032
+  },
+  {
+   "cond": "daily RSI<30 at breakdown",
+   "n": 14,
+   "bear_trap_rate": 0.357,
+   "median_r90": 0.055
+  },
+  {
+   "cond": "volume spike (z>1)",
+   "n": 17,
+   "bear_trap_rate": 0.353,
+   "median_r90": 0.064
+  },
+  {
+   "cond": "weekly swing structure bearish",
+   "n": 6,
+   "bear_trap_rate": 0.5,
+   "median_r90": 0.013
+  },
+  {
+   "cond": "200DMA rising (bull-market dips)",
+   "n": 15,
+   "bear_trap_rate": 0.467,
+   "median_r90": 0.047
+  }
+ ],
+ "walk_forward": {
+  "n_test": 9,
+  "accuracy": 0.333,
+  "brier": 0.382,
+  "base_rate_accuracy": 0.556,
+  "hi_conf_trap_hit": 0.0,
+  "lo_conf_trap_hit": 0.5,
+  "n_hi": 1,
+  "n_lo": 6
+ },
+ "today_breakdown_flag": 1,
+ "low_55d": 71084.0,
+ "p_bear_trap_today": 0.084,
+ "trap_drivers": {
+  "swing_score": -0.5,
+  "macro_score": -0.372,
+  "rsi_d": -0.293,
+  "macd_w_hist": -0.188,
+  "pos_365": -0.11,
+  "low_wick": -0.085,
+  "days_since_halving": -0.05,
+  "hyg_roc60": -0.043,
+  "us10y_chg90": -0.039,
+  "dd_ath": -0.034,
+  "roc30": -0.033,
+  "dxy_roc60": -0.003,
+  "vol30": -0.002,
+  "rsi_w": -0.001,
+  "ma200_slope": 0.004,
+  "mayer": 0.007,
+  "spx_p_ma200": 0.016,
+  "vix": 0.046,
+  "vol_z": 0.061,
+  "roc90": 0.104,
+  "p_200wma": 0.534
+ },
+ "gb_importance": {
+  "vix": 0.104,
+  "dd_ath": 0.095,
+  "macro_score": 0.089,
+  "days_since_halving": 0.088,
+  "rsi_d": 0.074,
+  "p_200wma": 0.07,
+  "ma200_slope": 0.057,
+  "vol_z": 0.053
+ },
+ "recent_breakouts": [
+  {
+   "date": "2025-07-10",
+   "trap": 0,
+   "r30": 0.004
+  },
+  {
+   "date": "2025-08-13",
+   "trap": 1,
+   "r30": -0.059
+  },
+  {
+   "date": "2026-01-13",
+   "trap": 1,
+   "r30": -0.305
+  },
+  {
+   "date": "2026-04-17",
+   "trap": 1,
+   "r30": 0.004
+  },
+  {
+   "date": "2026-08-19",
+   "trap": 0,
+   "r30": 0.168
+  },
+  {
+   "date": "2026-09-21",
+   "trap": null,
+   "r30": -0.03
+  }
+ ],
+ "recent_breakdowns": [
+  {
+   "date": "2025-11-04",
+   "trap": 0,
+   "r30": -0.093
+  },
+  {
+   "date": "2026-01-31",
+   "trap": 0,
+   "r30": -0.125
+  },
+  {
+   "date": "2026-06-02",
+   "trap": 0,
+   "r30": -0.078
+  },
+  {
+   "date": "2026-11-08",
+   "trap": null,
+   "r30": null
+  }
+ ],
+ "knn": {
+  "analog_dates": [
+   "2022-04-14",
+   "2022-05-04",
+   "2018-11-11",
+   "2020-03-11",
+   "2022-03-21",
+   "2018-10-10",
+   "2026-04-29",
+   "2026-05-16",
+   "2026-03-16",
+   "2020-02-29",
+   "2026-01-20",
+   "2022-09-17",
+   "2023-03-12",
+   "2025-11-20",
+   "2022-08-23"
+  ],
+  "median_r30": -0.098,
+  "median_r90": -0.194,
+  "median_r180": -0.005,
+  "p_up_30": 0.2,
+  "p_up_90": 0.2,
+  "p_up_180": 0.467,
+  "q10_r90": -0.467,
+  "q90_r90": 0.139
+ },
+ "score_weights": {
+  "valuation": 0.3,
+  "trend": 0.25,
+  "momentum": 0.15,
+  "cycle": 0.15,
+  "macro": 0.15
+ },
+ "score_now": {
+  "valuation": 1.021,
+  "trend": -0.119,
+  "momentum": -0.148,
+  "cycle": 1.0,
+  "macro": -1.189,
+  "total": 0.226
+ },
+ "score_quintiles_median_fwd": {
+  "Q1 low": {
+   "90": -0.019,
+   "180": -0.089,
+   "365": -0.25
+  },
+  "Q2": {
+   "90": -0.049,
+   "180": -0.015,
+   "365": -0.234
+  },
+  "Q3": {
+   "90": -0.043,
+   "180": 0.225,
+   "365": 0.693
+  },
+  "Q4": {
+   "90": 0.281,
+   "180": 0.743,
+   "365": 1.242
+  },
+  "Q5 high": {
+   "90": 0.268,
+   "180": 0.421,
+   "365": 1.208
+  }
+ },
+ "score_ic": {
+  "30": 0.206,
+  "90": 0.341,
+  "180": 0.39,
+  "365": 0.585
+ },
+ "score_pctile_now": 66.9,
+ "score_near_now": {
+  "n_days": 990,
+  "median_r90": 0.177,
+  "median_r180": 0.436,
+  "median_r365": 1.045,
+  "p_up_90": 0.653,
+  "p_up_180": 0.748,
+  "p_up_365": 0.973
+ },
+ "monte_carlo": {
+  "pool_days": 966,
+  "regime": "price<200DMA & macro headwind",
+  "d30": {
+   "p10": 51321.0,
+   "p25": 59308.0,
+   "p50": 67816.0,
+   "p75": 76751.0,
+   "p90": 86995.0
+  },
+  "d90": {
+   "p10": 40364.0,
+   "p25": 51575.0,
+   "p50": 66255.0,
+   "p75": 83158.0,
+   "p90": 101754.0
+  },
+  "d180": {
+   "p10": 31588.0,
+   "p25": 43967.0,
+   "p50": 61980.0,
+   "p75": 87265.0,
+   "p90": 117169.0
+  },
+  "p_touch_60k_90d": 0.654,
+  "p_touch_55k_180d": 0.664,
+  "p_reclaim_80k_90d": 0.545
+ },
+ "levels": {
+  "vol-node 4": 90638.0,
+  "Sep-2026 high": 86603.0,
+  "50DMA": 80537.0,
+  "vol-node 3": 77698.0,
+  "vol-node 2": 76619.0,
+  "111DMA": 76360.0,
+  "200DMA": 73036.0,
+  "0.618 retr. 58.6k\u219286.6k": 69272.0,
+  "200WMA": 67989.0,
+  "2021 ATH (69k)": 67567.0,
+  "0.786 retr.": 64560.0,
+  "vol-node 1": 63679.0,
+  "Feb-2026 low": 62702.0,
+  "2026 low (Jun)": 58559.0,
+  "-60% from ATH": 49901.0,
+  "-70% from ATH": 37426.0
+ }
+}

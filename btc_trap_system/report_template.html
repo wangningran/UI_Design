@@ -1,0 +1,292 @@
+<title>BTC 陷阱判定 2026-11</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&family=Noto+Sans+SC:wght@400;500;700&display=swap">
+<style>
+/* Layout: single reading column (max 980px) — verdict first, then evidence, charts, scenarios, system design. */
+:root{
+  --bg:#f6f7f9; --panel:#ffffff; --fg:#14171c; --fg2:#4b5260; --muted:#7a8191; --line:#e2e5eb; --grid:#eceef2;
+  --accent:#2a78d6; --accent2:#eb6834; --bear:#c93b3a; --bull:#11865a; --warn:#b87900; --band:rgba(42,120,214,.12); --band2:rgba(42,120,214,.22);
+  --f-text:"IBM Plex Sans","Noto Sans SC",system-ui,sans-serif; --f-mono:"IBM Plex Mono",ui-monospace,monospace;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --bg:#101318; --panel:#171b22; --fg:#eceef2; --fg2:#b4bac6; --muted:#858c9a; --line:#2a303b; --grid:#222833;
+  --accent:#3987e5; --accent2:#d95926; --bear:#e66767; --bull:#2fb57e; --warn:#d9a020; --band:rgba(57,135,229,.16); --band2:rgba(57,135,229,.30); color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#101318; --panel:#171b22; --fg:#eceef2; --fg2:#b4bac6; --muted:#858c9a; --line:#2a303b; --grid:#222833;
+  --accent:#3987e5; --accent2:#d95926; --bear:#e66767; --bull:#2fb57e; --warn:#d9a020; --band:rgba(57,135,229,.16); --band2:rgba(57,135,229,.30); color-scheme:dark}
+body{background:var(--bg);color:var(--fg);font-family:var(--f-text);font-size:15px;line-height:1.65}
+.wrap{max-width:980px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:32px 64px;display:flex;flex-direction:column;gap:40px}
+h1,h2,h3{text-wrap:balance;line-height:1.25;margin:0}
+h1{font-size:30px;font-weight:700}
+h2{font-size:21px;font-weight:700;padding-bottom:8px;border-bottom:1px solid var(--line)}
+h3{font-size:16px;font-weight:600}
+p{margin:0;max-width:68ch;color:var(--fg2)}
+section{display:flex;flex-direction:column;gap:16px}
+.eyebrow{font-family:var(--f-mono);font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+.mono,td.n,.num{font-family:var(--f-mono);font-variant-numeric:tabular-nums}
+header{display:flex;flex-direction:column;gap:10px}
+.ticker{display:flex;flex-wrap:wrap;gap:8px 24px;font-family:var(--f-mono);font-size:13px;color:var(--fg2)}
+.ticker b{color:var(--fg);font-weight:500}
+.verdict{background:var(--panel);border:1px solid var(--line);border-radius:6px;padding:20px;display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:20px}
+.verdict>div{display:flex;flex-direction:column;gap:8px;min-width:0}
+.pill{display:inline-flex;align-items:center;gap:6px;font-size:12px;font-weight:600;padding:2px 10px;border-radius:99px;border:1px solid currentColor;width:fit-content}
+.pill.bear{color:var(--bear)} .pill.bull{color:var(--bull)} .pill.warn{color:var(--warn)}
+.big{font-size:20px;font-weight:700;line-height:1.35}
+.tbl{overflow-x:auto;border:1px solid var(--line);border-radius:6px;background:var(--panel)}
+table{border-collapse:collapse;width:100%;font-size:14px}
+th,td{padding:9px 12px;text-align:left;border-bottom:1px solid var(--line);vertical-align:top}
+th{font-size:12px;font-weight:600;color:var(--muted);letter-spacing:.04em;background:var(--bg)}
+tr:last-child td{border-bottom:none}
+td.n{text-align:right;white-space:nowrap}
+.lean{font-weight:600;white-space:nowrap}
+.lean.bear{color:var(--bear)} .lean.bull{color:var(--bull)} .lean.mid{color:var(--warn)}
+.chart{background:var(--panel);border:1px solid var(--line);border-radius:6px;padding:14px 14px 8px;position:relative}
+.chart svg{display:block;width:100%;height:auto;overflow:visible}
+.chart .cap{font-size:13px;color:var(--muted);padding:6px 2px 2px}
+.legend{display:flex;flex-wrap:wrap;gap:4px 16px;font-size:12px;color:var(--fg2);padding:0 2px 8px}
+.legend i{display:inline-block;width:14px;height:2px;vertical-align:middle;margin-right:6px}
+.tip{position:absolute;pointer-events:none;background:var(--panel);border:1px solid var(--line);border-radius:4px;padding:6px 9px;font-family:var(--f-mono);font-size:12px;line-height:1.5;color:var(--fg);box-shadow:0 2px 8px rgba(0,0,0,.12);white-space:nowrap;z-index:2}
+.axis text{fill:var(--muted);font-family:var(--f-mono);font-size:11px}
+.grid line{stroke:var(--grid)}
+.ann{fill:var(--fg2);font-size:11px;font-family:var(--f-text)}
+.two{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:16px}
+.two>*{min-width:0}
+.ladder td:first-child{width:46%}
+.ladder tr.now td{background:var(--band);font-weight:600}
+.flow{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:10px}
+.flow div{background:var(--panel);border:1px solid var(--line);border-radius:6px;padding:12px;display:flex;flex-direction:column;gap:4px;min-width:0}
+.flow .k{font-family:var(--f-mono);font-size:11px;color:var(--accent);letter-spacing:.06em}
+.flow p{font-size:13px}
+ul{margin:0;padding-left:20px;color:var(--fg2);max-width:70ch}
+li+li{margin-top:4px}
+.note{font-size:13px;color:var(--muted)}
+a{color:var(--accent)}
+</style>
+
+<div class="wrap">
+<header>
+  <div class="eyebrow">BTC/USD · 日线数据 2014-09 → __DATE__ · 回测 + 宏观 + 周期</div>
+  <h1>现在是熊市陷阱，还是牛市陷阱？</h1>
+  <div class="ticker">
+    <span>价格 <b>$__PRICE__</b></span><span>距 ATH $124,753 <b>__DD__</b></span><span>ATH 后第 <b>__DSA__</b> 天</span>
+    <span>减半后第 <b>__DSH__</b> 天</span><span>日 RSI <b>__RSI__</b></span><span>美10Y <b>__US10Y__%</b></span>
+  </div>
+</header>
+
+<section>
+  <div class="verdict">
+    <div>
+      <span class="pill bear">已确认 · 牛市陷阱</span>
+      <div class="big">8–9 月从 58.6k 涨到 86.6k 的那段，是熊市反弹。</div>
+      <p>9 月 21 日突破 55 日高点 82,262 之后没能站稳，现价比突破位低 16.9%。按本系统的定义（回落到突破位 −5% 以下，且之前没有再涨 10%），这已经是一个确认的牛市陷阱。</p>
+    </div>
+    <div>
+      <span class="pill warn">短期（2–8 周）· 不像熊市陷阱</span>
+      <div class="big">这次跌破 73.6k，真正的假跌破概率大约只有 15–25%。</div>
+      <p>三种方法的估计：同类历史条件下的基准率 21%，事件模型 8%，状态相似度 kNN 的 90 天上涨概率 20%。宏观是 12 年来最差的 7% 区间。现在抄底，赌的是小概率那边。</p>
+    </div>
+    <div>
+      <span class="pill bull">中期（6–12 个月）· 周期筑底窗口</span>
+      <div class="big">时间上已经到了历史底部的窗口，价格上可能还差最后一跌。</div>
+      <p>前三轮周期都在 ATH 后第 363–410 天见底，减半后第 889–924 天见底，现在分别是第 403 天和第 937 天。综合评分处在历史上 12 个月后上涨概率 97% 的区间。真正的熊市陷阱更可能出现在 58–63k 一带的假跌破。</p>
+    </div>
+  </div>
+</section>
+
+<section>
+  <h2>K 线与均线：价格站在三重支撑上</h2>
+  <p>今天收在 200 周均线（约 68.0k）上方 0.9%。附近还有 2021 年的前高 67.6k，以及 58.6k→86.6k 这段涨幅的 0.618 回撤位 69.3k。价格已经跌破 200 日均线和 50 日均线，日 RSI 25 处在 12 年来最低的 2%。周线的高低点结构还没有坏，因为 6 月的低点 58.6k 还在。</p>
+  <div class="chart" id="c-price">
+    <div class="legend"><span><i style="background:var(--accent)"></i>收盘价</span><span><i style="background:var(--accent2)"></i>200 日均线</span><span><i style="background:var(--fg2)"></i>200 周均线</span><span><i style="background:var(--muted);opacity:.6"></i>50 日均线</span></div>
+  </div>
+</section>
+
+<section>
+  <h2>所有方法的证据表</h2>
+  <div class="tbl"><table>
+    <thead><tr><th>方法</th><th>当前读数</th><th>历史分位 / 回测</th><th>倾向</th></tr></thead>
+    <tbody>__EVIDENCE__</tbody>
+  </table></div>
+  <p class="note">倾向一栏：“偏空”指支持继续下跌（9 月是牛市陷阱、本轮跌破是真跌破），“偏多”指支持本轮跌破是熊市陷阱或正在筑底。</p>
+</section>
+
+<section>
+  <h2>周期叠加：按 ATH 对齐的四轮熊市</h2>
+  <p>纵轴是价格相对该轮 ATH 的比例。本轮回撤（最深 −53%）比前三轮的 −84%、−83%、−76% 浅得多，延续了“每轮回撤递减”的规律。如果按递减规律再降一档，底部大约在 −55% 到 −65%，对应 44k–56k。如果 6 月的 58.6k 就是底，那么本轮回撤就是 −53%。</p>
+  <div class="chart" id="c-cycle">
+    <div class="legend" id="lg-cycle"></div>
+  </div>
+</section>
+
+<section>
+  <h2>历史回测：跌破 55 日低点之后发生了什么</h2>
+  <p>事件定义：日收盘价跌破前 55 日最低价。如果之后 60 天内价格收回到跌破位 +5% 以上，并且在此之前没有再跌 10%，就算熊市陷阱；否则算真跌破。2015 年以来共有 __NEV__ 次可以完整评估的事件。</p>
+  <div class="tbl"><table>
+    <thead><tr><th>条件</th><th>样本</th><th>熊市陷阱比例</th><th>90 天收益中位数</th></tr></thead>
+    <tbody>__COND__</tbody>
+  </table></div>
+  <p class="note">当前同时满足：价格在 200 日均线下方、宏观逆风、距 ATH 超过 40%、日 RSI 低于 30、放量。对应的最相近一行是“距 ATH 超过 40% 且宏观逆风”，熊市陷阱比例 22%，90 天收益中位数 −3.2%。</p>
+</section>
+
+<section>
+  <h2>蒙特卡洛：未来 180 天的价格区间</h2>
+  <p>只从历史上“价格在 200 日均线下方且宏观逆风”的 __POOL__ 个交易日里，按 10 日一块抽取收益率，模拟 5000 条路径。中位数 90 天后约 __MC90__。90 天内跌到 60k 以下的概率是 __P60__，重新站上 80k 的概率是 __P80__。这个结果主要反映波动有多大，对方向的判断帮助不大。</p>
+  <div class="chart" id="c-mc">
+    <div class="legend"><span><i style="background:var(--band2);height:8px"></i>25–75% 区间</span><span><i style="background:var(--band);height:8px"></i>10–90% 区间</span><span><i style="background:var(--accent)"></i>中位数</span></div>
+  </div>
+</section>
+
+<section>
+  <h2>关键价位</h2>
+  <div class="two">
+    <div class="tbl ladder"><table><thead><tr><th>价位</th><th>美元</th><th>与现价</th></tr></thead><tbody>__LEVELS__</tbody></table></div>
+    <div style="display:flex;flex-direction:column;gap:12px">
+      <h3>剧本与触发条件</h3>
+      <div class="tbl"><table><thead><tr><th>剧本</th><th>概率</th></tr></thead><tbody>
+        <tr><td><b>A. 延续下探</b><br><span class="note">日收盘有效跌破 67.6k（200 周均线和 2021 年前高），先看 62.7k，再测 58.6k。周收盘跌破 58.6k，周线结构转为更低的低点，下一档是 50k 一带（距 ATH −60%）。</span></td><td class="n">≈50%</td></tr>
+        <tr><td><b>B. 区间筑底</b><br><span class="note">在 64k–76k 之间震荡 1–3 个月，等 12 月 9 日加息落地、ETF 资金流转正。</span></td><td class="n">≈30%</td></tr>
+        <tr><td><b>C. 熊市陷阱（V 形反转）</b><br><span class="note">10 个交易日内日收盘重新站上 73.6k（跌破位）和 200 日均线 73.0k，并且 76.4k（111 日均线）也收复，同时 ETF 连续 3 天净流入、美元指数和 10 年期收益率掉头向下。</span></td><td class="n">≈20%</td></tr>
+      </tbody></table></div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <h2>宏观环境</h2>
+  <ul>
+    <li><b>美联储转向加息。</b>CME FedWatch 对 12 月 9 日加息的定价接近 100%，其中加 25bp 约 86%。周二公布的 CPI 高于预期。</li>
+    <li><b>利率创周期新高。</b>美 10 年期收益率 5.15%，处在 2010 年以来 99.5% 分位；90 天上升 46bp。3 个月期收益率 90 天上升 42bp，反映政策利率上行。</li>
+    <li><b>美元走强、信用走弱。</b>美元指数 60 天上涨 4.0%（91% 分位），高收益债 ETF HYG 60 天下跌 2.0%，原油 89 美元。</li>
+    <li><b>资金面流出。</b>11 月 5 日到 12 日，现货比特币 ETF 净流出约 14.9 亿美元，IBIT 连续 9 天流出，长单爆仓约 13 亿美元。</li>
+    <li><b>与美股高度联动。</b>BTC 与标普 500 的 90 日相关性 0.48（87% 分位），而标普正好卡在 200 日均线上。美股一旦破位，会直接拖累 BTC。</li>
+  </ul>
+  <p>综合宏观流动性评分 __MACRO__，处在历史 7% 分位。BTC 历史上真正的底部（2015、2018、2022）大多出现在宏观最紧的阶段，或者紧缩快结束的时候，所以这个评分并不排除筑底，只说明短期反弹缺少燃料。</p>
+</section>
+
+<section>
+  <h2>价格位置预测系统</h2>
+  <p>把上面用到的方法整理成一套可以每天重复运行的流程。代码在仓库的 <span class="mono">btc_trap_system/</span> 目录：<span class="mono">fetch_data.py</span> 拉数据，<span class="mono">engine.py</span> 算特征和事件标签，<span class="mono">analyze.py</span> 跑回测并输出结论。</p>
+  <div class="flow">
+    <div><span class="k">L1 周期</span><h3>时间位置</h3><p>ATH 后天数、减半后天数、本轮最大回撤，与前三轮按 ATH 对齐比较。</p></div>
+    <div><span class="k">L2 估值</span><h3>贵还是便宜</h3><p>Mayer 倍数（价格 / 200 日均线）、价格 / 200 周均线、对数价格的 4 年 z 分数。</p></div>
+    <div><span class="k">L3 趋势</span><h3>结构</h3><p>均线排列和斜率、周线 20 均线、周线高低点结构（HH/HL 或 LH/LL）。</p></div>
+    <div><span class="k">L4 动量</span><h3>超买超卖</h3><p>日线和周线 RSI、周线 MACD 柱、30/90 天涨跌幅、30 天波动率。</p></div>
+    <div><span class="k">L5 K 线</span><h3>突破与陷阱</h3><p>55 日区间突破或跌破事件、影线比例、放量 z 分数、连续下跌天数。</p></div>
+    <div><span class="k">L6 宏观</span><h3>流动性</h3><p>美元指数、10 年和 3 个月收益率、标普趋势、VIX、HYG、原油、日元，以及 BTC 与美股的相关性。</p></div>
+    <div><span class="k">L7 资金</span><h3>加密内部</h3><p>ETH/BTC 趋势、MSTR/BTC 比值，以及 ETF 资金流（通过新闻手动录入）。</p></div>
+  </div>
+  <h3>三个输出</h3>
+  <div class="tbl"><table>
+    <thead><tr><th>输出</th><th>做法</th><th>回测表现</th></tr></thead>
+    <tbody>
+      <tr><td>陷阱概率<br><span class="note">发生突破或跌破时</span></td><td>条件基准率，加上逻辑回归和梯度提升的平均。按年份滚动训练，下一年测试。</td><td>样本外只有 9 个事件，准确率 33%，低于直接猜基准率的 56%。<b>目前不可靠</b>，只作参考，以条件基准率为主。</td></tr>
+      <tr><td>价格位置评分<br><span class="note">每天</span></td><td>估值 30%、趋势 25%、动量 15%、周期 15%、宏观 15%，各项先做扩展窗口 z 分数（不使用未来数据）。</td><td>与未来收益的 Spearman 相关：30 天 __IC30__，90 天 __IC90__，180 天 __IC180__，365 天 __IC365__。按五分位分组的 365 天收益中位数，最低组 __Q1__，最高组 __Q5__。</td></tr>
+      <tr><td>区间预测<br><span class="note">30/90/180 天</span></td><td>kNN 历史相似状态（10 个特征，每月取一个最相似日，共 15 个）加上分状态的块状自助蒙特卡洛。</td><td>给出分布而不是点位。当前 kNN 最相似的日期：2018-11、2022-04/05、2020-03、2026 年上半年。</td></tr>
+    </tbody>
+  </table></div>
+  <div class="chart" id="c-score">
+    <div class="legend"><span><i style="background:var(--accent)"></i>综合价格位置评分（越高越便宜、越接近底部；200 周均线需要约 3 年数据，所以从 2018 年 8 月开始）</span></div>
+  </div>
+  <h3>每日判定规则</h3>
+  <ul>
+    <li>评分在前 40%，且 ATH 后 300–450 天、回撤超过 45%：进入<b>筑底区</b>，分批建仓，不一次性追。</li>
+    <li>出现跌破事件时，先查条件基准率。陷阱概率低于 30%，就等 SFP，也就是放量刺破后在 1–3 天内收回跌破位，再操作。</li>
+    <li>出现突破事件时，如果 200 日均线向下或宏观评分小于 −0.5，默认当作牛市陷阱，直到周收盘站稳突破位 +5%。</li>
+    <li>宏观评分从 −1 以下回升到 0 以上，通常是反弹能持续的前提。</li>
+  </ul>
+  <h3>局限</h3>
+  <ul>
+    <li>BTC 只经历过 3 轮完整周期，周期规律的样本很小，评分里的周期项是看着历史设计出来的，存在过拟合。</li>
+    <li>这个环境里拿不到链上数据（MVRV、实现价格、长期持有者供应）、资金费率、未平仓合约和恐惧贪婪指数，这些都应该加进 L2 和 L7。</li>
+    <li>ETF 资金流和美联储定价来自新闻，没有进入回测。</li>
+    <li>以上是统计推断，不构成投资建议。</li>
+  </ul>
+</section>
+
+<section>
+  <h2>数据来源</h2>
+  <ul class="note">
+    <li>价格与宏观序列：Yahoo Finance 日线（BTC-USD、DX-Y.NYB、^TNX、^IRX、^GSPC、^VIX、HYG、GC=F、CL=F、JPY=X、ETH-USD、MSTR、IBIT），截至 __DATE__。</li>
+    <li><a href="https://en.coin-turk.com/bitcoin-falls-to-68500-as-fed-signals-rate-hike-etf-outflows-hit-1-49-billion/">Coin-Turk：ETF 流出 14.9 亿美元、加息预期</a></li>
+    <li><a href="https://www.coindesk.com/markets/2026/11/11/bitcoin-sits-out-stock-rebound-as-etf-outflows-extend-to-fourth-day">CoinDesk：ETF 连续流出</a></li>
+    <li><a href="https://www.ccn.com/news/crypto/bitcoin-etf-outflows-1-28b-fed-rate-hike/">CCN：加息概率上升</a></li>
+    <li><a href="https://www.cnbc.com/amp/2026/11/13/treasury-yields-fed-rates.html">CNBC：10 年期收益率 5.15%</a></li>
+    <li><a href="https://www.cnbc.com/2026/11/12/us-treasurys-bonds-yields.html">CNBC：收益率重回 5% 以上、加息预期</a></li>
+  </ul>
+</section>
+</div>
+
+<script>
+const CH=__CHARTS__;
+const css=n=>getComputedStyle(document.documentElement).getPropertyValue(n).trim();
+const NS="http://www.w3.org/2000/svg";
+function el(t,a,p){const e=document.createElementNS(NS,t);for(const k in a)e.setAttribute(k,a[k]);if(p)p.appendChild(e);return e}
+const fmtK=v=>v>=1000?(v/1000).toFixed(v>=100000?0:1).replace(/\.0$/,"")+"k":v.toFixed(0);
+function niceTicks(lo,hi,n){const st=Math.pow(10,Math.floor(Math.log10((hi-lo)/n)));const m=[1,2,2.5,5,10].find(m=>(hi-lo)/(st*m)<=n)*st;const out=[];for(let v=Math.ceil(lo/m)*m;v<=hi+1e-9;v+=m)out.push(+v.toFixed(6));return out}
+function lineChart(id,{x,series,yfmt,xfmt,xticks,ylog,annos,bands,vline,tipfmt,h=300,yn=5}){
+  const box=document.getElementById(id);const W=900,H=h,m={l:52,r:16,t:12,b:26};
+  const svg=el("svg",{viewBox:`0 0 ${W} ${H}`,role:"img"});box.insertBefore(svg,box.querySelector(".cap"));
+  const all=series.flatMap(s=>s.y).concat(bands?bands.flatMap(b=>b.lo.concat(b.hi)):[]).filter(v=>v!=null&&isFinite(v));
+  let lo=Math.min(...all),hi=Math.max(...all);const pad=(hi-lo)*.05;lo-=pad;hi+=pad;
+  const tf=ylog?Math.log:v=>v;const X=i=>m.l+(i-x[0])/(x[x.length-1]-x[0])*(W-m.l-m.r);
+  const xs=typeof x[0]==="number"?x:null;
+  const xi=xs?(v=>X(v)):null;
+  const Y=v=>m.t+(tf(hi)-tf(v))/(tf(hi)-tf(lo))*(H-m.t-m.b);
+  const g=el("g",{class:"grid"},svg),ax=el("g",{class:"axis"},svg);
+  (ylog?[20000,30000,40000,50000,60000,70000,80000,100000,120000].filter(v=>v>lo&&v<hi):niceTicks(lo,hi,yn)).forEach(v=>{
+    el("line",{x1:m.l,x2:W-m.r,y1:Y(v),y2:Y(v)},g);const t=el("text",{x:m.l-6,y:Y(v)+4,"text-anchor":"end"},ax);t.textContent=yfmt(v)});
+  xticks.forEach(([i,lab])=>{const t=el("text",{x:xi(i),y:H-6,"text-anchor":"middle"},ax);t.textContent=lab});
+  if(vline!=null){el("line",{x1:xi(vline.at),x2:xi(vline.at),y1:m.t,y2:H-m.b,stroke:css("--muted"),"stroke-dasharray":"3 3"},svg);const t=el("text",{x:xi(vline.at)+4,y:m.t+10,class:"ann"},svg);t.textContent=vline.label}
+  (bands||[]).forEach(b=>{let d="";x.forEach((v,i)=>d+=(i?"L":"M")+xi(v)+","+Y(b.hi[i]));for(let i=x.length-1;i>=0;i--)d+="L"+xi(x[i])+","+Y(b.lo[i]);el("path",{d:d+"Z",fill:css(b.color),stroke:"none"},svg)});
+  series.forEach(s=>{const xx=s.x||x;let d="",on=false;s.y.forEach((v,i)=>{if(v==null||!isFinite(v)){on=false;return}d+=(on?"L":"M")+xi(xx[i]).toFixed(1)+","+Y(v).toFixed(1);on=true});
+    el("path",{d,fill:"none",stroke:css(s.color),"stroke-width":s.w||2,"stroke-opacity":s.op||1,"stroke-dasharray":s.dash||"","stroke-linejoin":"round"},svg)});
+  (annos||[]).forEach(a=>{const cx=xi(a.x),cy=Y(a.y);el("circle",{cx,cy,r:4,fill:css(a.color||"--accent"),stroke:css("--panel"),"stroke-width":2},svg);
+    const t=el("text",{x:cx+(a.dx||6),y:cy+(a.dy||-8),class:"ann","text-anchor":a.anchor||"start"},svg);t.textContent=a.text});
+  // hover
+  const tip=document.createElement("div");tip.className="tip";tip.hidden=true;box.appendChild(tip);
+  const cross=el("line",{y1:m.t,y2:H-m.b,stroke:css("--muted"),"stroke-width":1,visibility:"hidden"},svg);
+  const hit=el("rect",{x:m.l,y:m.t,width:W-m.l-m.r,height:H-m.t-m.b,fill:"transparent"},svg);
+  hit.addEventListener("pointermove",ev=>{const r=svg.getBoundingClientRect();const sx=(ev.clientX-r.left)/r.width*W;
+    let bi=0,bd=1e9;x.forEach((v,i)=>{const d=Math.abs(xi(v)-sx);if(d<bd){bd=d;bi=i}});
+    cross.setAttribute("x1",xi(x[bi]));cross.setAttribute("x2",xi(x[bi]));cross.setAttribute("visibility","visible");
+    tip.innerHTML=tipfmt(bi);tip.hidden=false;const bx=box.getBoundingClientRect();let L=ev.clientX-bx.left+12;if(L>bx.width-170)L=ev.clientX-bx.left-180;tip.style.left=L+"px";tip.style.top=(ev.clientY-bx.top-10)+"px"});
+  hit.addEventListener("pointerleave",()=>{tip.hidden=true;cross.setAttribute("visibility","hidden")});
+}
+function dayIdx(dates){return dates.map((d,i)=>i)}
+function draw(){
+  document.querySelectorAll(".chart svg,.chart .tip").forEach(n=>n.remove());
+  // price
+  const P=CH.price,ix=dayIdx(P.dates),f=v=>v==null?"—":"$"+Math.round(v).toLocaleString();
+  const yt=[];P.dates.forEach((d,i)=>{if(d.endsWith("-01")&&["01","04","07","10"].includes(d.slice(5,7)))yt.push([i,d.slice(0,7)])});
+  const at=d=>P.dates.indexOf(d);
+  lineChart("c-price",{x:ix,ylog:true,yfmt:fmtK,xticks:yt,
+    series:[{y:P.ma50,color:"--muted",w:1.5,op:.6},{y:P.wma200,color:"--fg2",w:1.5,dash:"5 4"},{y:P.ma200,color:"--accent2",w:1.5},{y:P.close,color:"--accent"}],
+    annos:[{x:at("2025-10-06"),y:124753,text:"ATH 124.8k",anchor:"end",dx:-8},{x:at("2026-06-30"),y:58559,text:"6月低点 58.6k",dy:16},
+      {x:at("2026-09-21"),y:P.close[at("2026-09-21")],text:"9/21 突破 → 牛市陷阱",color:"--bear",anchor:"end",dx:-8,dy:-10},
+      {x:ix.length-1,y:P.close[ix.length-1],text:"今日 "+fmtK(P.close[ix.length-1]),anchor:"end",dx:-10,dy:26,color:"--bear"}],
+    tipfmt:i=>`${P.dates[i]}<br>收盘 ${f(P.close[i])}<br>200日 ${f(P.ma200[i])}<br>200周 ${f(P.wma200[i])}`});
+  // cycles
+  const C=CH.cycles,names=Object.keys(C),cols=["--muted","--accent2","--fg2","--accent"],dashes=["2 3","5 4","",""];
+  const lg=document.getElementById("lg-cycle");lg.innerHTML=names.map((n,k)=>`<span><i style="background:var(${cols[k]})"></i>${n.replace("current","本轮").replace("ATH ","ATH ")}</span>`).join("");
+  const grid=[];for(let d=0;d<=1098;d+=3)grid.push(d);
+  const S=names.map((n,k)=>{const m=new Map(C[n].x.map((d,i)=>[d,C[n].y[i]]));return{y:grid.map(d=>{for(let e=0;e<3;e++){if(m.has(d+e))return m.get(d+e);if(m.has(d-e))return m.get(d-e)}return null}),color:cols[k],w:k===3?2.5:1.6,dash:dashes[k],name:n}});
+  lineChart("c-cycle",{x:grid,ylog:false,yfmt:v=>(v*100).toFixed(0)+"%",xticks:[0,180,365,545,730,910,1095].map(d=>[d,d===0?"ATH":d+"天"]),series:S,yn:8,
+    vline:{at:403,label:"第 403 天（今天）"},
+    tipfmt:i=>`ATH 后第 ${grid[i]} 天<br>`+S.map(s=>`${s.name.slice(0,7).replace("current","本轮")}: ${s.y[i]==null?"—":(s.y[i]*100).toFixed(0)+"%"}`).join("<br>")});
+  // mc
+  const M=CH.mc,d0=[0].concat(M.days),p0=CH.price.close[CH.price.close.length-1],w=a=>[p0].concat(a);
+  lineChart("c-mc",{x:d0,yfmt:fmtK,xticks:[0,30,60,90,120,150,180].map(d=>[d,d===0?"今天":"+"+d+"天"]),
+    bands:[{lo:w(M.p10),hi:w(M.p90),color:"--band"},{lo:w(M.p25),hi:w(M.p75),color:"--band2"}],series:[{y:w(M.p50),color:"--accent"}],
+    tipfmt:i=>`+${d0[i]} 天<br>P90 ${f(w(M.p90)[i])}<br>P75 ${f(w(M.p75)[i])}<br>中位 ${f(w(M.p50)[i])}<br>P25 ${f(w(M.p25)[i])}<br>P10 ${f(w(M.p10)[i])}`,h:260});
+  // score
+  const Sc=CH.score,sx=dayIdx(Sc.dates),st=[];Sc.dates.forEach((d,i)=>{const y=d.slice(0,4);if(i===0||Sc.dates[i-1].slice(0,4)!==y){if(+y%2===0)st.push([i,y])}});
+  const bot={"2018-12":"2018 底","2020-03":"2020-03","2022-11":"2022 底","2021-04":"2021 顶"};const an=[];
+  Object.keys(bot).forEach(k=>{let bi=-1,bv=k.endsWith("04")?-Infinity:Infinity;Sc.dates.forEach((d,i)=>{if(d.startsWith(k)){const v=Sc.close[i];if(k.endsWith("04")?v>bv:v<bv){bv=v;bi=i}}});if(bi>=0)an.push({x:bi,y:Sc.total[bi],text:bot[k],anchor:"middle",dx:0,dy:k.endsWith("04")?16:-10,color:k.endsWith("04")?"--bear":"--bull"})});
+  an.push({x:sx.length-1,y:Sc.total[sx.length-1],text:"今天 "+Sc.total[sx.length-1].toFixed(2),anchor:"end",dx:-8,dy:-10});
+  lineChart("c-score",{x:sx,yfmt:v=>v.toFixed(1),xticks:st,series:[{y:Sc.total,color:"--accent",w:1.6}],annos:an,h:240,
+    tipfmt:i=>`${Sc.dates[i]}<br>评分 ${Sc.total[i].toFixed(2)}<br>BTC ${f(Sc.close[i])}`});
+}
+draw();
+matchMedia("(prefers-color-scheme: dark)").addEventListener("change",draw);
+new MutationObserver(draw).observe(document.documentElement,{attributes:true,attributeFilter:["data-theme"]});
+</script>

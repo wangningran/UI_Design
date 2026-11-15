@@ -1,0 +1,840 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>刻光 KEGUANG · 亚克力宠物刻画定制</title>
+<meta name="description" content="在黑色亚克力板上手工刻出你家毛孩子的每一根毛发。上传照片，定制一幅独一无二的宠物刻画。">
+<meta name="theme-color" content="#0b0b0c">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;1,500&family=Noto+Serif+SC:wght@500;700;900&family=Noto+Sans+SC:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --ink:#0b0b0c;          /* black acrylic */
+  --ink-2:#141416;
+  --ink-3:#1d1d20;
+  --line:#2a2a2e;
+  --scratch:#f2efe8;      /* scratched white */
+  --muted:#9a978f;
+  --mat:#ece6da;          /* cream mat board */
+  --mat-2:#dcd4c4;
+  --mat-ink:#2a2622;
+  --cut:#1d5446;          /* cutting-mat green */
+  --cut-line:rgba(170,230,205,.22);
+  --eye:#7cc4b2;          /* teal eye glint */
+  --red:#ff2e4d;          /* "follow" red from the app screenshot */
+  --serif:"Noto Serif SC","Cormorant Garamond",serif;
+  --sans:"Noto Sans SC",system-ui,-apple-system,"PingFang SC",sans-serif;
+  --en:"Cormorant Garamond",Georgia,serif;
+  --gutter:clamp(16px,4vw,48px);
+  --max:1240px;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth;-webkit-text-size-adjust:100%}
+body{background:var(--ink);color:var(--scratch);font-family:var(--sans);line-height:1.7;overflow-x:hidden}
+img,canvas{display:block;max-width:100%}
+a{color:inherit;text-decoration:none}
+button,input,select,textarea{font:inherit;color:inherit}
+.wrap{max-width:var(--max);margin:0 auto;padding:0 var(--gutter)}
+.en{font-family:var(--en);font-style:italic;letter-spacing:.02em}
+.eyebrow{font-family:var(--en);font-size:13px;letter-spacing:.32em;text-transform:uppercase;color:var(--muted)}
+h1,h2,h3{font-family:var(--serif);font-weight:700;line-height:1.25;letter-spacing:.02em}
+h2{font-size:clamp(28px,4.2vw,48px)}
+.btn{display:inline-flex;align-items:center;gap:10px;padding:14px 26px;border-radius:999px;font-weight:500;font-size:15px;transition:transform .25s,background .25s,color .25s,box-shadow .25s;cursor:pointer;border:1px solid transparent}
+.btn-primary{background:var(--scratch);color:var(--ink)}
+.btn-primary:hover{transform:translateY(-2px);box-shadow:0 10px 30px rgba(242,239,232,.18)}
+.btn-ghost{border-color:#3a3a3f;color:var(--scratch)}
+.btn-ghost:hover{border-color:var(--scratch)}
+.btn .arrow{transition:transform .25s}
+.btn:hover .arrow{transform:translateX(4px)}
+
+/* grain over everything dark */
+body::before{content:"";position:fixed;inset:-50%;z-index:100;pointer-events:none;opacity:.06;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  animation:grain 1.2s steps(4) infinite}
+@keyframes grain{0%{transform:translate(0,0)}25%{transform:translate(-3%,2%)}50%{transform:translate(2%,-3%)}75%{transform:translate(-2%,-1%)}}
+
+/* ---------- nav ---------- */
+.nav{position:fixed;top:0;left:0;right:0;z-index:50;transition:background .3s,backdrop-filter .3s}
+.nav.scrolled{background:rgba(11,11,12,.72);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border-bottom:1px solid var(--line)}
+.nav .wrap{display:flex;align-items:center;justify-content:space-between;height:68px}
+.brand{display:flex;align-items:center;gap:10px;font-family:var(--serif);font-weight:900;font-size:20px;letter-spacing:.12em}
+.brand-mark{width:30px;height:30px;border-radius:50%;background:var(--scratch);position:relative;overflow:hidden}
+.brand-mark::after{content:"";position:absolute;inset:0;background:repeating-linear-gradient(115deg,var(--ink) 0 1.4px,transparent 1.4px 4px);opacity:.9}
+.brand small{font-family:var(--en);font-style:italic;font-weight:500;font-size:14px;color:var(--muted);letter-spacing:.2em;margin-left:2px}
+.nav-links{display:flex;gap:32px;list-style:none;font-size:14px;color:#c8c5bd}
+.nav-links a:hover{color:var(--scratch)}
+.nav-cta{background:var(--red);color:#fff;padding:9px 20px;border-radius:999px;font-size:14px;font-weight:500}
+.nav-cta:hover{filter:brightness(1.08)}
+@media (max-width:820px){.nav-links{display:none}}
+
+/* ---------- hero ---------- */
+.hero{position:relative;min-height:100svh;display:flex;align-items:center;padding:110px 0 70px;overflow:hidden;
+  background:radial-gradient(1200px 700px at 72% 45%,#1b1b1f 0%,var(--ink) 60%)}
+.hero-grid{display:grid;grid-template-columns:1fr 1.05fr;gap:clamp(32px,5vw,80px);align-items:center}
+.hero h1{font-size:clamp(40px,6.4vw,84px);font-weight:900;margin:22px 0 24px}
+.hero h1 .scratch-text{background:linear-gradient(100deg,#fff 0%,#bdb9b0 40%,#fff 55%,#8f8b83 100%);background-size:250% 100%;-webkit-background-clip:text;background-clip:text;color:transparent;animation:shine 6s ease-in-out infinite}
+@keyframes shine{0%,100%{background-position:100% 0}50%{background-position:0 0}}
+.hero .lead{color:#bdbab2;font-size:clamp(15px,1.5vw,17px);max-width:30em}
+.hero-actions{display:flex;flex-wrap:wrap;gap:14px;margin-top:36px}
+.hero-stats{display:flex;gap:clamp(20px,4vw,48px);margin-top:52px;padding-top:28px;border-top:1px solid var(--line)}
+.hero-stats b{display:block;font-family:var(--en);font-size:clamp(28px,3.2vw,40px);font-weight:600;font-style:normal;line-height:1.1}
+.hero-stats span{font-size:13px;color:var(--muted)}
+.reveal-line{display:block;overflow:hidden}
+.reveal-line>span{display:block;transform:translateY(110%);animation:rise 1s cubic-bezier(.2,.8,.2,1) forwards}
+.reveal-line:nth-child(2)>span{animation-delay:.12s}
+@keyframes rise{to{transform:none}}
+.fade-in{opacity:0;transform:translateY(16px);animation:fadeUp .9s .45s cubic-bezier(.2,.8,.2,1) forwards}
+.fade-in.d2{animation-delay:.6s}.fade-in.d3{animation-delay:.75s}
+@keyframes fadeUp{to{opacity:1;transform:none}}
+
+/* stage: cutting mat + cream mat + acrylic */
+.stage{perspective:1400px;position:relative}
+.cutmat{position:relative;padding:clamp(22px,4vw,48px);border-radius:10px;transform-style:preserve-3d;
+  background-color:var(--cut);
+  background-image:
+    linear-gradient(var(--cut-line) 1px,transparent 1px),
+    linear-gradient(90deg,var(--cut-line) 1px,transparent 1px),
+    linear-gradient(rgba(170,230,205,.09) 1px,transparent 1px),
+    linear-gradient(90deg,rgba(170,230,205,.09) 1px,transparent 1px);
+  background-size:60px 60px,60px 60px,12px 12px,12px 12px;
+  box-shadow:0 40px 80px rgba(0,0,0,.55),inset 0 0 0 1px rgba(255,255,255,.05);
+  transform:rotateX(var(--rx,8deg)) rotateY(var(--ry,-10deg)) rotateZ(-2deg);transition:transform .6s cubic-bezier(.2,.8,.2,1)}
+.cutmat .ruler{position:absolute;font-family:var(--en);font-size:11px;color:rgba(200,240,225,.55);letter-spacing:.1em}
+.cutmat .ruler.t{top:6px;left:60px}.cutmat .ruler.r{right:8px;bottom:60px;writing-mode:vertical-rl}
+.mat{background:var(--mat);padding:clamp(18px,3.4vw,40px);border-radius:2px;position:relative;
+  box-shadow:0 2px 0 var(--mat-2),0 18px 40px rgba(0,0,0,.45);transform:translateZ(20px)}
+.mat::before{content:"";position:absolute;inset:clamp(18px,3.4vw,40px);box-shadow:-1px -1px 0 rgba(0,0,0,.18),1px 1px 0 rgba(255,255,255,.9);pointer-events:none;z-index:3}
+.acrylic{position:relative;aspect-ratio:1/1;background:#050506;overflow:hidden;cursor:crosshair}
+.acrylic canvas{position:absolute;inset:0;width:100%;height:100%}
+.acrylic .fallback{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;filter:grayscale(1) contrast(1.35) brightness(1.05);opacity:0}
+.acrylic.use-fallback .fallback{animation:wipe 3.5s ease forwards}
+@keyframes wipe{from{opacity:1;clip-path:circle(0% at 50% 45%)}to{opacity:1;clip-path:circle(75% at 50% 45%)}}
+.acrylic::after{content:"";position:absolute;inset:0;pointer-events:none;z-index:2;
+  background:radial-gradient(420px circle at var(--mx,30%) var(--my,20%),rgba(255,255,255,.10),transparent 45%),
+             linear-gradient(115deg,transparent 30%,rgba(255,255,255,.08) 45%,transparent 55%);
+  background-size:100% 100%,250% 100%;background-position:0 0,var(--sheen,120%) 0;transition:background-position 1.6s ease}
+.acrylic.done::after{--sheen:-60%}
+.live{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-top:14px;font-size:12px;color:var(--mat-ink);font-family:var(--en);letter-spacing:.12em}
+.live .dot{display:inline-block;width:7px;height:7px;border-radius:50%;background:var(--red);margin-right:8px;animation:pulse 1.2s infinite}
+.live.finished .dot{background:#2f8f6f;animation:none}
+@keyframes pulse{50%{opacity:.25}}
+.live button{background:none;border:0;cursor:pointer;color:var(--mat-ink);font-family:var(--sans);font-size:12px;letter-spacing:.06em;opacity:.7}
+.live button:hover{opacity:1}
+.live>span{white-space:nowrap}
+@media (max-width:520px){.live{font-size:10.5px;letter-spacing:.06em}.live .cnt{display:none}}
+.progress{height:2px;background:var(--mat-2);margin-top:8px;overflow:hidden}
+.progress i{display:block;height:100%;width:0;background:var(--mat-ink)}
+.scroll-hint{position:absolute;left:50%;bottom:22px;transform:translateX(-50%);font-size:11px;letter-spacing:.3em;color:var(--muted);display:flex;flex-direction:column;align-items:center;gap:8px}
+.scroll-hint::after{content:"";width:1px;height:36px;background:linear-gradient(var(--muted),transparent);animation:drip 2s infinite}
+@keyframes drip{0%{transform:scaleY(0);transform-origin:top}50%{transform:scaleY(1);transform-origin:top}51%{transform-origin:bottom}100%{transform:scaleY(0);transform-origin:bottom}}
+@media (max-width:900px){
+  .hero{padding-top:96px}
+  .hero-grid{grid-template-columns:1fr}
+  .stage{order:-1;max-width:520px;margin:0 auto;width:100%}
+  .scroll-hint{display:none}
+}
+
+/* ---------- marquee ---------- */
+.marquee{border-block:1px solid var(--line);overflow:hidden;padding:18px 0;background:var(--ink-2)}
+.marquee-track{display:flex;gap:48px;width:max-content;animation:slide 32s linear infinite;font-family:var(--serif);font-size:clamp(16px,2vw,22px);color:#cfcbc2;white-space:nowrap}
+.marquee-track span::after{content:"✦";margin-left:48px;color:var(--eye);font-size:.7em}
+@keyframes slide{to{transform:translateX(-50%)}}
+
+/* ---------- section scaffolding ---------- */
+section{position:relative}
+.sec{padding:clamp(80px,11vw,140px) 0}
+.sec-head{display:flex;justify-content:space-between;align-items:flex-end;gap:24px;margin-bottom:clamp(36px,5vw,60px);flex-wrap:wrap}
+.sec-head p{color:var(--muted);max-width:28em;font-size:15px}
+.reveal{opacity:0;transform:translateY(28px);transition:opacity .9s cubic-bezier(.2,.8,.2,1),transform .9s cubic-bezier(.2,.8,.2,1)}
+.reveal.in{opacity:1;transform:none}
+
+/* ---------- works (cutting mat background) ---------- */
+.works{background-color:var(--cut);
+  background-image:linear-gradient(var(--cut-line) 1px,transparent 1px),linear-gradient(90deg,var(--cut-line) 1px,transparent 1px),
+                   linear-gradient(rgba(170,230,205,.08) 1px,transparent 1px),linear-gradient(90deg,rgba(170,230,205,.08) 1px,transparent 1px);
+  background-size:80px 80px,80px 80px,16px 16px,16px 16px}
+.works .eyebrow{color:rgba(220,245,235,.7)}
+.works .sec-head p{color:rgba(230,245,238,.75)}
+.tabs{display:flex;gap:8px;flex-wrap:wrap}
+.tab{padding:8px 18px;border-radius:999px;border:1px solid rgba(255,255,255,.25);background:transparent;cursor:pointer;font-size:14px;transition:all .2s}
+.tab.on,.tab:hover{background:var(--scratch);color:var(--ink);border-color:var(--scratch)}
+.masonry{columns:3 300px;column-gap:20px}
+.card{break-inside:avoid;margin-bottom:20px;background:#fff;color:#1b1b1b;border-radius:14px;overflow:hidden;box-shadow:0 14px 34px rgba(0,0,0,.28);transition:transform .35s cubic-bezier(.2,.8,.2,1),box-shadow .35s}
+.card:hover{transform:translateY(-6px) rotate(-.3deg);box-shadow:0 24px 50px rgba(0,0,0,.38)}
+.card.hide{display:none}
+.card .frame{background:var(--mat);padding:14px;position:relative}
+.card .art{position:relative;background:#050506;overflow:hidden}
+.card .art canvas,.card .art img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.card .art img{opacity:0;transition:opacity .5s}
+.card .art.fallback img{opacity:1;filter:grayscale(1) contrast(1.35)}
+.card:hover .art:not(.fallback) img{opacity:1}
+.card .badge{position:absolute;top:24px;right:24px;z-index:2;background:rgba(0,0,0,.55);color:#fff;font-size:11px;padding:3px 10px;border-radius:999px;backdrop-filter:blur(6px);letter-spacing:.05em}
+.card .badge.hover{opacity:0;transition:opacity .3s}
+.card:hover .badge.hover{opacity:1}.card:hover .badge.idle{opacity:0}
+.card .badge.idle{transition:opacity .3s}
+.card .meta{padding:14px 16px 16px}
+.card h3{font-family:var(--sans);font-weight:500;font-size:15px;line-height:1.5}
+.card .row{display:flex;justify-content:space-between;align-items:center;margin-top:10px;font-size:12px;color:#888}
+.card .who{display:flex;align-items:center;gap:8px}
+.card .av{width:22px;height:22px;border-radius:50%;background:var(--ink);position:relative;overflow:hidden}
+.card .av::after{content:"";position:absolute;inset:0;background:repeating-linear-gradient(115deg,#fff 0 1px,transparent 1px 3px);opacity:.6}
+.like{display:flex;align-items:center;gap:4px;background:none;border:0;cursor:pointer;color:#666;font-size:13px}
+.like svg{width:16px;height:16px;transition:transform .2s}
+.like.on{color:var(--red)}.like.on svg{fill:var(--red);stroke:var(--red);transform:scale(1.2)}
+.works-note{margin-top:20px;text-align:center;font-size:13px;color:rgba(230,245,238,.6)}
+
+/* ---------- macro (sticky zoom) ---------- */
+.macro{height:280vh;background:var(--ink)}
+.macro-sticky{position:sticky;top:0;height:100svh;overflow:hidden;display:grid;place-items:center}
+.macro-img{position:absolute;inset:0;display:grid;place-items:center}
+.macro-img canvas,.macro-img img{width:min(78vh,88vw);height:min(78vh,88vw);object-fit:cover;transform-origin:var(--ox,50%) var(--oy,42%);will-change:transform}
+.macro-img img{filter:grayscale(1) contrast(1.35)}
+.macro-copy{position:relative;z-index:2;text-align:center;padding:0 var(--gutter);pointer-events:none}
+.macro-copy::before{content:"";position:absolute;left:50%;top:50%;width:min(760px,110vw);height:340px;transform:translate(-50%,-50%);background:radial-gradient(closest-side,rgba(5,5,6,.82),rgba(5,5,6,0));z-index:-1}
+.macro-copy p{font-family:var(--serif);font-size:clamp(26px,4.4vw,56px);font-weight:900;line-height:1.35;opacity:0;transform:translateY(20px);transition:opacity .6s,transform .6s;text-shadow:0 4px 30px rgba(0,0,0,.9)}
+.macro-copy p.on{opacity:1;transform:none}
+.macro-copy p+p{position:absolute;left:0;right:0;top:50%;transform:translateY(-50%) translateY(20px)}
+.macro-copy p+p.on{transform:translateY(-50%)}
+.macro-copy .sub{display:block;font-family:var(--en);font-style:italic;font-weight:500;font-size:clamp(14px,1.6vw,20px);color:var(--muted);margin-top:10px;letter-spacing:.1em}
+.macro-vignette{position:absolute;inset:0;background:radial-gradient(closest-side,transparent 55%,rgba(11,11,12,.85) 100%);pointer-events:none;z-index:1}
+
+/* ---------- process ---------- */
+.steps{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:var(--line);border:1px solid var(--line);border-radius:16px;overflow:hidden}
+.step{background:var(--ink);padding:clamp(24px,3vw,36px);position:relative;min-height:280px;display:flex;flex-direction:column;transition:background .3s}
+.step:hover{background:var(--ink-2)}
+.step .num{font-family:var(--en);font-size:56px;line-height:1;color:transparent;-webkit-text-stroke:1px #55555b}
+.step h3{font-size:20px;margin:28px 0 10px}
+.step p{color:var(--muted);font-size:14px}
+.step .time{margin-top:auto;padding-top:20px;font-size:12px;color:var(--eye);letter-spacing:.1em}
+.step svg{position:absolute;top:30px;right:28px;width:34px;height:34px;stroke:#77777d;fill:none;stroke-width:1.2}
+@media (max-width:900px){.steps{grid-template-columns:1fr 1fr}}
+@media (max-width:560px){.steps{grid-template-columns:1fr}.step{min-height:0}}
+
+/* ---------- pricing (cream mat section) ---------- */
+.pricing{background:var(--mat);color:var(--mat-ink)}
+.pricing .eyebrow{color:#8a8277}
+.pricing .sec-head p{color:#6f685e}
+.plans{display:grid;grid-template-columns:repeat(3,1fr);gap:20px}
+.plan{background:#f6f2ea;border:1px solid #d6cdbd;border-radius:16px;padding:30px;display:flex;flex-direction:column;position:relative;transition:transform .3s,box-shadow .3s}
+.plan:hover{transform:translateY(-4px);box-shadow:0 20px 40px rgba(60,50,30,.12)}
+.plan.hot{background:var(--ink);color:var(--scratch);border-color:var(--ink)}
+.plan .tag{position:absolute;top:-12px;right:24px;background:var(--red);color:#fff;font-size:12px;padding:4px 12px;border-radius:999px}
+.plan .size-box{height:130px;display:grid;place-items:center;margin-bottom:22px}
+.plan .size-box i{display:block;background:#0b0b0c;border:8px solid #fff;box-shadow:0 0 0 1px #d6cdbd,0 10px 20px rgba(0,0,0,.18)}
+.plan.hot .size-box i{box-shadow:0 0 0 1px #333,0 10px 30px rgba(0,0,0,.6)}
+.plan h3{font-size:22px}
+.plan .dim{font-family:var(--en);font-size:15px;opacity:.65;letter-spacing:.08em}
+.plan .price{font-family:var(--en);font-size:46px;font-weight:600;margin:18px 0 6px;line-height:1}
+.plan .price small{font-size:16px;font-family:var(--sans);opacity:.6;margin-left:4px}
+.plan ul{list-style:none;margin:16px 0 26px;font-size:14px;opacity:.85}
+.plan li{padding:7px 0;border-top:1px dashed currentColor;border-color:rgba(120,110,95,.3)}
+.plan li::before{content:"—";margin-right:10px;opacity:.5}
+.plan .btn{margin-top:auto;justify-content:center}
+.plan:not(.hot) .btn{background:var(--ink);color:var(--scratch)}
+@media (max-width:900px){.plans{grid-template-columns:1fr}}
+
+/* ---------- custom order ---------- */
+.order-grid{display:grid;grid-template-columns:1fr 1fr;gap:clamp(28px,5vw,72px);align-items:start}
+.drop{display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;gap:10px;border:1.5px dashed #3c3c42;border-radius:16px;padding:40px 20px;cursor:pointer;transition:border-color .2s,background .2s;color:var(--muted);font-size:14px}
+.drop:hover,.drop.drag{border-color:var(--scratch);background:var(--ink-2)}
+.drop strong{color:var(--scratch);font-size:16px;font-weight:500}
+.drop svg{width:36px;height:36px;stroke:var(--scratch);fill:none;stroke-width:1.3}
+.field{display:flex;flex-direction:column;gap:8px;margin-top:20px}
+.field label{font-size:13px;color:var(--muted)}
+.field input,.field select,.field textarea{background:var(--ink-2);border:1px solid var(--line);border-radius:10px;padding:13px 14px;outline:none;transition:border-color .2s}
+.field input:focus,.field select:focus,.field textarea:focus{border-color:#77777d}
+.field-row{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.chips{display:flex;gap:8px;flex-wrap:wrap}
+.chip{padding:9px 16px;border-radius:999px;border:1px solid var(--line);background:transparent;cursor:pointer;font-size:14px;transition:all .2s}
+.chip.on{background:var(--scratch);color:var(--ink);border-color:var(--scratch)}
+.preview .cutmat{transform:rotate(-1.5deg)}
+.preview-note{font-size:12px;color:var(--muted);margin-top:16px;text-align:center}
+.total{display:flex;justify-content:space-between;align-items:center;margin-top:26px;padding-top:20px;border-top:1px solid var(--line)}
+.total b{font-family:var(--en);font-size:34px;font-weight:600}
+@media (max-width:900px){.order-grid{grid-template-columns:1fr}.preview{order:-1}}
+@media (max-width:480px){.field-row{grid-template-columns:1fr}}
+
+/* ---------- faq + footer ---------- */
+.faq{max-width:820px}
+.faq details{border-bottom:1px solid var(--line);padding:22px 0}
+.faq summary{list-style:none;cursor:pointer;display:flex;justify-content:space-between;gap:20px;font-family:var(--serif);font-size:18px;font-weight:500}
+.faq summary::-webkit-details-marker{display:none}
+.faq summary::after{content:"+";font-family:var(--en);font-size:26px;line-height:1;transition:transform .3s;color:var(--muted)}
+.faq details[open] summary::after{transform:rotate(45deg)}
+.faq p{color:var(--muted);margin-top:12px;font-size:15px}
+footer{border-top:1px solid var(--line);padding:56px 0 40px;font-size:13px;color:var(--muted)}
+footer .wrap{display:flex;justify-content:space-between;gap:24px;flex-wrap:wrap}
+footer a{text-decoration:underline;text-underline-offset:3px}
+.toast{position:fixed;left:50%;bottom:28px;transform:translate(-50%,120px);background:var(--scratch);color:var(--ink);padding:14px 22px;border-radius:999px;font-size:14px;z-index:80;transition:transform .4s cubic-bezier(.2,.8,.2,1);box-shadow:0 10px 30px rgba(0,0,0,.4)}
+.toast.show{transform:translate(-50%,0)}
+
+@media (prefers-reduced-motion:reduce){
+  *,*::before,*::after{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important}
+  .macro{height:auto}.macro-sticky{position:relative}
+}
+</style>
+</head>
+<body>
+
+<nav class="nav" id="nav">
+  <div class="wrap">
+    <a class="brand" href="#top"><span class="brand-mark" aria-hidden="true"></span>刻光<small>Keguang</small></a>
+    <ul class="nav-links">
+      <li><a href="#works">作品</a></li>
+      <li><a href="#process">工艺</a></li>
+      <li><a href="#pricing">尺寸价格</a></li>
+      <li><a href="#faq">常见问题</a></li>
+    </ul>
+    <a class="nav-cta" href="#order">开始定制</a>
+  </div>
+</nav>
+
+<!-- ============ HERO ============ -->
+<header class="hero" id="top">
+  <div class="wrap hero-grid">
+    <div class="hero-copy">
+      <p class="eyebrow fade-in">Hand-scratched · Acrylic Pet Portrait</p>
+      <h1>
+        <span class="reveal-line"><span>一刀一毛，</span></span>
+        <span class="reveal-line"><span><span class="scratch-text">刻下它的样子</span></span></span>
+      </h1>
+      <p class="lead fade-in d2">把毛孩子的照片交给我们。我们在黑色亚克力板上用刻刀手工刻出数万道细线，让每一根毛发都在光下发亮。</p>
+      <div class="hero-actions fade-in d3">
+        <a class="btn btn-primary" href="#order">上传照片定制 <span class="arrow">→</span></a>
+        <a class="btn btn-ghost" href="#works">看看作品</a>
+      </div>
+      <div class="hero-stats fade-in d3">
+        <div><b class="en">20h+</b><span>每幅平均刻画时长</span></div>
+        <div><b class="en">30,000+</b><span>刀，一刀一根毛</span></div>
+        <div><b class="en">1 / 1</b><span>每一幅仅此一件</span></div>
+      </div>
+    </div>
+
+    <div class="stage" id="heroStage">
+      <div class="cutmat" id="heroMat">
+        <span class="ruler t">20 × 20 cm · R700</span>
+        <span class="ruler r">KEGUANG STUDIO</span>
+        <div class="mat">
+          <div class="acrylic" id="heroArt" aria-label="一只灰猫的刻画正在被逐刀刻出">
+            <img class="fallback" alt="" crossorigin="anonymous">
+            <canvas class="paint"></canvas>
+            <canvas class="blade"></canvas>
+          </div>
+          <div class="live" id="heroLive">
+            <span><span class="dot"></span><span id="liveLabel">LIVE · 正在刻画</span></span>
+            <span><span class="cnt"><span id="strokeCount">0</span> 刀 &nbsp;·&nbsp; </span><button id="replay" type="button">↻ 重刻一遍</button></span>
+          </div>
+          <div class="progress"><i id="liveBar"></i></div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="scroll-hint">SCROLL</div>
+</header>
+
+<div class="marquee" aria-hidden="true">
+  <div class="marquee-track">
+    <span>纯手工刻画</span><span>黑色亚克力板</span><span>一宠一稿 · 免费改稿</span><span>原木 / 金属画框可选</span><span>顺丰包邮</span><span>Made by hand, line by line</span>
+    <span>纯手工刻画</span><span>黑色亚克力板</span><span>一宠一稿 · 免费改稿</span><span>原木 / 金属画框可选</span><span>顺丰包邮</span><span>Made by hand, line by line</span>
+  </div>
+</div>
+
+<!-- ============ WORKS ============ -->
+<section class="works sec" id="works">
+  <div class="wrap">
+    <div class="sec-head reveal">
+      <div>
+        <p class="eyebrow">Selected Works</p>
+        <h2>它们都被认真地刻过</h2>
+      </div>
+      <div class="tabs" role="tablist">
+        <button class="tab on" data-filter="all">全部</button>
+        <button class="tab" data-filter="cat">猫猫</button>
+        <button class="tab" data-filter="dog">狗狗</button>
+      </div>
+    </div>
+    <div class="masonry" id="gallery"></div>
+    <p class="works-note">悬停（手机上轻点）卡片，可以对比原照片和刻画成品</p>
+  </div>
+</section>
+
+<!-- ============ MACRO ============ -->
+<section class="macro" id="macro" aria-label="细节放大">
+  <div class="macro-sticky">
+    <div class="macro-img" id="macroImg"></div>
+    <div class="macro-vignette"></div>
+    <div class="macro-copy">
+      <p id="m1">靠近一点看<span class="sub">Come closer</span></p>
+      <p id="m2">每一根毛，都是一刀<span class="sub">Every hair is a single cut</span></p>
+    </div>
+  </div>
+</section>
+
+<!-- ============ PROCESS ============ -->
+<section class="sec" id="process">
+  <div class="wrap">
+    <div class="sec-head reveal">
+      <div>
+        <p class="eyebrow">How it's made</p>
+        <h2>从一张照片，到一块会发光的板</h2>
+      </div>
+      <p>全程线上沟通。你只需要选一张最喜欢的照片，剩下的交给刻刀和时间。</p>
+    </div>
+    <div class="steps reveal">
+      <div class="step">
+        <svg viewBox="0 0 34 34"><rect x="4" y="7" width="26" height="20" rx="2"/><circle cx="12" cy="14" r="2.5"/><path d="M4 24l8-7 6 5 4-3 8 6"/></svg>
+        <span class="num">01</span><h3>上传照片</h3><p>正脸、光线均匀、毛发清晰的照片最好。可以多发几张，我们帮你挑。</p><span class="time">当天回复</span>
+      </div>
+      <div class="step">
+        <svg viewBox="0 0 34 34"><rect x="5" y="5" width="24" height="24"/><path d="M5 12h24M12 5v24"/></svg>
+        <span class="num">02</span><h3>构图确认</h3><p>出黑白构图小样，确认角度、裁切和眼睛的颜色。不满意免费改稿。</p><span class="time">1–2 天</span>
+      </div>
+      <div class="step">
+        <svg viewBox="0 0 34 34"><path d="M6 28L24 10l4 4L10 32z"/><path d="M24 10l3-5 2 2-1 4"/></svg>
+        <span class="num">03</span><h3>手工刻画</h3><p>在黑色亚克力上用刻刀逐根刻出毛发，眼睛手工上色。过程会拍视频给你。</p><span class="time">7–10 天</span>
+      </div>
+      <div class="step">
+        <svg viewBox="0 0 34 34"><path d="M4 11l13-6 13 6v13l-13 6-13-6z"/><path d="M4 11l13 6 13-6M17 17v13"/></svg>
+        <span class="num">04</span><h3>装裱寄出</h3><p>米白卡纸 + 画框装裱，防震包装，顺丰包邮到家。</p><span class="time">2–3 天到手</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ PRICING ============ -->
+<section class="pricing sec" id="pricing">
+  <div class="wrap">
+    <div class="sec-head reveal">
+      <div>
+        <p class="eyebrow">Sizes &amp; Pricing</p>
+        <h2>选一个尺寸</h2>
+      </div>
+      <p>价格含构图、刻画、眼睛上色、卡纸和画框装裱。多只宠物同框 +40%。</p>
+    </div>
+    <div class="plans reveal">
+      <div class="plan">
+        <div class="size-box"><i style="width:70px;height:70px"></i></div>
+        <h3>小方 · 桌面款</h3><span class="dim">15 × 15 cm</span>
+        <div class="price en">¥599<small>起</small></div>
+        <ul><li>单只宠物头像</li><li>原木细框</li><li>约 7 天完成</li></ul>
+        <a class="btn" href="#order" data-size="s">选这个</a>
+      </div>
+      <div class="plan hot">
+        <span class="tag">最多人选</span>
+        <div class="size-box"><i style="width:92px;height:92px"></i></div>
+        <h3>中方 · 经典款</h3><span class="dim">20 × 20 cm</span>
+        <div class="price en">¥899<small>起</small></div>
+        <ul><li>头像或半身</li><li>原木 / 银色金属框</li><li>附刻画过程视频</li></ul>
+        <a class="btn btn-primary" href="#order" data-size="m">选这个</a>
+      </div>
+      <div class="plan">
+        <div class="size-box"><i style="width:118px;height:118px"></i></div>
+        <h3>大方 · 挂墙款</h3><span class="dim">30 × 30 cm</span>
+        <div class="price en">¥1,499<small>起</small></div>
+        <ul><li>半身或全身</li><li>任选画框 + 挂钩</li><li>附过程视频 + 手写卡片</li></ul>
+        <a class="btn" href="#order" data-size="l">选这个</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ ORDER ============ -->
+<section class="sec" id="order">
+  <div class="wrap order-grid">
+    <form id="orderForm" class="reveal" novalidate>
+      <p class="eyebrow">Start your portrait</p>
+      <h2 style="margin:10px 0 28px">上传照片，<br>先看看它被刻出来的样子</h2>
+
+      <label class="drop" id="drop">
+        <svg viewBox="0 0 36 36"><path d="M18 24V8M11 14l7-7 7 7"/><path d="M6 22v6h24v-6"/></svg>
+        <strong>点击或拖入宠物照片</strong>
+        <span>JPG / PNG，正脸、光线均匀效果最好</span>
+        <input type="file" id="file" accept="image/*" hidden>
+      </label>
+
+      <div class="field">
+        <label>尺寸</label>
+        <div class="chips" id="sizeChips">
+          <button type="button" class="chip" data-size="s" data-price="599">15×15</button>
+          <button type="button" class="chip on" data-size="m" data-price="899">20×20</button>
+          <button type="button" class="chip" data-size="l" data-price="1499">30×30</button>
+        </div>
+      </div>
+      <div class="field">
+        <label>画框</label>
+        <div class="chips" id="frameChips">
+          <button type="button" class="chip on" data-add="0">原木</button>
+          <button type="button" class="chip" data-add="60">银色金属</button>
+          <button type="button" class="chip" data-add="60">黑色金属</button>
+        </div>
+      </div>
+      <div class="field-row">
+        <div class="field"><label for="petName">它的名字</label><input id="petName" placeholder="例如：团子"></div>
+        <div class="field"><label for="contact">微信 / 手机</label><input id="contact" placeholder="方便我们联系你"></div>
+      </div>
+      <div class="field"><label for="note">想说的话（可选）</label><textarea id="note" rows="3" placeholder="比如：眼睛是蓝绿色的，耳朵有一点缺口"></textarea></div>
+
+      <div class="total"><span style="color:var(--muted);font-size:14px">预估价格</span><b class="en" id="total">¥899</b></div>
+      <button class="btn btn-primary" type="submit" style="width:100%;justify-content:center;margin-top:18px">提交定制需求 <span class="arrow">→</span></button>
+    </form>
+
+    <div class="preview reveal">
+      <div class="cutmat">
+        <div class="mat">
+          <div class="acrylic" id="previewArt">
+            <canvas class="paint"></canvas>
+            <canvas class="blade"></canvas>
+          </div>
+          <div class="live finished" id="previewLive">
+            <span><span class="dot"></span><span id="previewLabel">示例预览</span></span>
+            <span id="previewName" style="font-family:var(--serif);letter-spacing:.2em"></span>
+          </div>
+        </div>
+      </div>
+      <p class="preview-note">预览由算法模拟刻画效果，仅供参考；实物为手工逐刀刻画，细节会更丰富。</p>
+    </div>
+  </div>
+</section>
+
+<!-- ============ FAQ ============ -->
+<section class="sec" id="faq" style="padding-top:0">
+  <div class="wrap">
+    <div class="sec-head reveal"><div><p class="eyebrow">FAQ</p><h2>常见问题</h2></div></div>
+    <div class="faq reveal">
+      <details open><summary>什么样的照片效果最好？</summary><p>正脸或微侧脸、自然光、对焦在眼睛上、毛发清楚的照片最好。手机拍的就可以，不需要专业相机。</p></details>
+      <details><summary>已经离开的毛孩子也能刻吗？</summary><p>可以。很多客人定制是为了纪念。照片模糊也没关系，可以多发几张，我们会综合参考。</p></details>
+      <details><summary>亚克力板会刮花或者褪色吗？</summary><p>刻画在板的背面，正面是光滑的亚克力，日常擦拭不会伤到画面。线条是刻出来的，不是印的，不会褪色。</p></details>
+      <details><summary>可以加急吗？</summary><p>可以，加急 5 天完成，+30%。节日前名额有限，建议提前两周预约。</p></details>
+      <details><summary>收到不满意怎么办？</summary><p>构图阶段可以无限次修改，确认后才开刻。成品如有运输损坏，免费重做。</p></details>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <span>© <span id="year"></span> 刻光 Keguang Studio · 亚克力宠物刻画定制（示例站点）</span>
+    <span>示例照片来自 Unsplash：Natalia Makarenko、Ian Talmacs、Dan LeFebvre、Nicolás Pinilla。刻画效果为算法模拟。</span>
+  </div>
+</footer>
+
+<div class="toast" id="toast"></div>
+
+<script>
+/* =====================================================================
+   Engraver: turns a photo into thousands of white "scratch" strokes on
+   black, and can animate them being cut one by one with a blade.
+   ===================================================================== */
+const U = (id, w) => `https://images.unsplash.com/${id}?auto=format&fit=crop&w=${w}&q=80`;
+
+function mulberry(seed){return function(){seed|=0;seed=seed+0x6D2B79F5|0;let t=Math.imul(seed^seed>>>15,1|seed);t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296}}
+
+function boxBlur(src,w,h,r){
+  const tmp=new Float32Array(src.length),out=new Float32Array(src.length),d=2*r+1;
+  for(let y=0;y<h;y++){let acc=0;const row=y*w;
+    for(let x=-r;x<=r;x++)acc+=src[row+Math.min(w-1,Math.max(0,x))];
+    for(let x=0;x<w;x++){tmp[row+x]=acc/d;acc+=src[row+Math.min(w-1,x+r+1)]-src[row+Math.max(0,x-r)]}}
+  for(let x=0;x<w;x++){let acc=0;
+    for(let y=-r;y<=r;y++)acc+=tmp[Math.min(h-1,Math.max(0,y))*w+x];
+    for(let y=0;y<h;y++){out[y*w+x]=acc/d;acc+=tmp[Math.min(h-1,y+r+1)*w+x]-tmp[Math.max(0,y-r)*w+x]}}
+  return out;
+}
+const blur2=(a,w,h,r)=>boxBlur(boxBlur(a,w,h,r),w,h,r);
+
+function loadImage(src){
+  return new Promise((res,rej)=>{const im=new Image();im.crossOrigin="anonymous";im.onload=()=>res(im);im.onerror=rej;im.src=src;});
+}
+
+/* Analyse the photo once at low resolution: tone, colour and fur direction */
+function analyse(img,aspect,opt){
+  const gw=opt.grid||300,gh=Math.round(gw/aspect);
+  const c=document.createElement('canvas');c.width=gw;c.height=gh;
+  const x=c.getContext('2d',{willReadFrequently:true});
+  const s=Math.max(gw/img.naturalWidth,gh/img.naturalHeight)*(opt.zoom||1);
+  const iw=img.naturalWidth*s,ih=img.naturalHeight*s;
+  let dx=gw/2-iw*(opt.fx??.5),dy=gh/2-ih*(opt.fy??.5);
+  dx=Math.min(0,Math.max(gw-iw,dx));dy=Math.min(0,Math.max(gh-ih,dy));
+  x.fillStyle='#000';x.fillRect(0,0,gw,gh);x.drawImage(img,dx,dy,iw,ih);
+  const px=x.getImageData(0,0,gw,gh).data; // throws if tainted -> caller falls back
+  const n=gw*gh,L=new Float32Array(n),R=new Uint8Array(n),G=new Uint8Array(n),B=new Uint8Array(n);
+  for(let i=0;i<n;i++){const r=px[i*4],g=px[i*4+1],b=px[i*4+2];R[i]=r;G[i]=g;B[i]=b;L[i]=(.299*r+.587*g+.114*b)/255}
+  // auto levels
+  const sample=[];for(let i=0;i<n;i+=5)sample.push(L[i]);sample.sort((a,b)=>a-b);
+  const lo=sample[Math.floor(sample.length*.03)],hi=sample[Math.floor(sample.length*.995)];
+  const T=new Float32Array(n),gamma=opt.gamma||1.15;
+  const Ls=boxBlur(L,gw,gh,1);
+  for(let i=0;i<n;i++){T[i]=Math.pow(Math.min(1,Math.max(0,(Ls[i]-lo)/Math.max(.05,hi-lo))),gamma)}
+  // structure tensor -> fur direction
+  const F=boxBlur(L,gw,gh,1),Jxx=new Float32Array(n),Jxy=new Float32Array(n),Jyy=new Float32Array(n);
+  for(let y=1;y<gh-1;y++)for(let x2=1;x2<gw-1;x2++){const i=y*gw+x2;
+    const gx=F[i+1]-F[i-1],gy=F[i+gw]-F[i-gw];Jxx[i]=gx*gx;Jxy[i]=gx*gy;Jyy[i]=gy*gy}
+  const r=Math.max(3,Math.round(gw/60));
+  const a=blur2(Jxx,gw,gh,r),b=blur2(Jxy,gw,gh,r),d=blur2(Jyy,gw,gh,r);
+  const DX=new Float32Array(n),DY=new Float32Array(n);
+  const cx=gw*(opt.cx??.5),cy=gh*(opt.cy??.45);
+  for(let y=0;y<gh;y++)for(let x2=0;x2<gw;x2++){const i=y*gw+x2;
+    const th=.5*Math.atan2(2*b[i],a[i]-d[i])+Math.PI/2;   // along the hair
+    let ux=Math.cos(th),uy=Math.sin(th);
+    const tr=a[i]+d[i]+1e-6,coh=Math.min(1,Math.sqrt((a[i]-d[i])**2+4*b[i]*b[i])/tr);
+    let rx=x2-cx,ry=y-cy;const rl=Math.hypot(rx,ry)||1;rx/=rl;ry/=rl; // fur grows outward
+    if(ux*rx+uy*ry<0){ux=-ux;uy=-uy}
+    const k=Math.pow(coh,.6);let vx=ux*k+rx*(1-k)*.8,vy=uy*k+ry*(1-k)*.8;const vl=Math.hypot(vx,vy)||1;
+    DX[i]=vx/vl;DY[i]=vy/vl}
+  return {gw,gh,T,R,G,B,DX,DY,cx:cx/gw,cy:cy/gh};
+}
+
+/* Turn the analysis into a list of strokes in CSS pixels */
+function makeStrokes(A,W,H,opt){
+  const rand=mulberry(opt.seed||7),{gw,gh,T,R,G,B,DX,DY}=A,sx=gw/W,sy=gh/H;
+  const N=Math.round(W*H/(opt.density||6)),out=[];
+  const at=(x,y)=>{const i=Math.min(gh-1,Math.max(0,y*sy|0))*gw+Math.min(gw-1,Math.max(0,x*sx|0));return i};
+  const scale=Math.max(.7,Math.min(1.4,W/520));
+  let tries=0;
+  while(out.length<N&&tries<N*14){tries++;
+    const x=rand()*W,y=rand()*H,i=at(x,y),v=T[i];
+    if(rand()>Math.max(.004,v*.98))continue;
+    const pass=v>.6&&rand()<.28?1:0;                       // second pass = highlights
+    const len=(pass?4:6+rand()*9)*scale*(.65+.6*v);
+    const h=len/2;let ux=DX[i],uy=DY[i];
+    const wob=(rand()-.5)*.35;const c=Math.cos(wob),s=Math.sin(wob);
+    [ux,uy]=[ux*c-uy*s,ux*s+uy*c];
+    const x1=x+ux*h,y1=y+uy*h,j=at(x1,y1);let vx=DX[j],vy=DY[j];if(vx*ux+vy*uy<0){vx=-vx;vy=-vy}
+    const x2=x1+vx*h,y2=y1+vy*h;
+    // tint: keep strong colours (eyes, nose), everything else engraved white
+    const r=R[i],g=G[i],b=B[i],mx=Math.max(r,g,b),mn=Math.min(r,g,b),sat=(mx-mn)/(mx+1);
+    const t=Math.min(1,Math.max(0,(sat-.18)/.25))*(opt.tint??.85);
+    const k=235/(mx+1),bright=.82+.18*v;
+    const cr=Math.round(((1-t)*240+t*r*k)*bright),cg=Math.round(((1-t)*238+t*g*k)*bright),cb=Math.round(((1-t)*232+t*b*k)*bright);
+    const alpha=(pass?.55:.22)+.6*v*(pass?.8:1);
+    const dist=Math.hypot(x/W-A.cx,(y/H-A.cy)*H/W);
+    out.push({x,y,x1,y1,x2,y2,a:Math.min(1,alpha),w:(.45+rand()*.55)*(pass?.8:1),col:`${cr},${cg},${cb}`,key:pass*5+dist+rand()*.22,ang:Math.atan2(y2-y,x2-x)});
+  }
+  out.sort((p,q)=>p.key-q.key);
+  return out;
+}
+
+class Engraver{
+  constructor(root,opt={}){
+    this.root=root;this.opt=opt;
+    this.paint=root.querySelector('canvas.paint');this.blade=root.querySelector('canvas.blade');
+    this.pc=this.paint.getContext('2d');this.bc=this.blade?this.blade.getContext('2d'):null;
+    this.i=0;this.raf=0;this.dust=[];this.bx=null;this.by=null;
+  }
+  async load(src){
+    this.img=src instanceof HTMLImageElement?src:await loadImage(src);
+    this.prepare();return this;
+  }
+  prepare(){
+    const r=this.root.getBoundingClientRect();
+    this.W=Math.max(10,r.width);this.H=Math.max(10,r.height);
+    const dpr=Math.min(2,window.devicePixelRatio||1);
+    for(const c of [this.paint,this.blade]){if(!c)continue;c.width=Math.round(this.W*dpr);c.height=Math.round(this.H*dpr);c.getContext('2d').setTransform(dpr,0,0,dpr,0,0)}
+    this.A=analyse(this.img,this.W/this.H,this.opt);
+    this.strokes=makeStrokes(this.A,this.W,this.H,this.opt);
+    this.clear();
+  }
+  clear(){const c=this.pc;c.fillStyle='#050506';c.fillRect(0,0,this.W,this.H);this.i=0;this.bc&&this.bc.clearRect(0,0,this.W,this.H)}
+  drawRange(a,b){
+    const c=this.pc;c.lineCap='round';
+    for(let k=a;k<b;k++){const s=this.strokes[k];
+      c.strokeStyle=`rgba(${s.col},${s.a})`;c.lineWidth=s.w;c.beginPath();c.moveTo(s.x,s.y);c.quadraticCurveTo(s.x1,s.y1,s.x2,s.y2);c.stroke()}
+  }
+  renderAll(){cancelAnimationFrame(this.raf);this.clear();this.drawRange(0,this.strokes.length);this.i=this.strokes.length;this.bc&&this.bc.clearRect(0,0,this.W,this.H);this.opt.onDone&&this.opt.onDone(this)}
+  play(ms=8000){
+    cancelAnimationFrame(this.raf);this.clear();this.root.classList.remove('done');
+    const n=this.strokes.length,t0=performance.now();this.bx=null;
+    const ease=t=>t<.5?2*t*t:1-Math.pow(-2*t+2,2)/2;  // slow start, fast middle, careful finish
+    const tick=now=>{
+      const t=Math.min(1,(now-t0)/ms),target=Math.floor(ease(t)*n);
+      if(target>this.i){this.drawRange(this.i,target);this.i=target}
+      this.drawBlade(t<1);
+      this.opt.onProgress&&this.opt.onProgress(this.i,n);
+      if(t<1||this.dust.length)this.raf=requestAnimationFrame(tick);
+      else{this.bc&&this.bc.clearRect(0,0,this.W,this.H);this.root.classList.add('done');this.opt.onDone&&this.opt.onDone(this)}
+    };
+    this.raf=requestAnimationFrame(tick);
+  }
+  drawBlade(active){
+    const c=this.bc;if(!c)return;c.clearRect(0,0,this.W,this.H);
+    const s=this.strokes[Math.max(0,this.i-1)];
+    if(active&&s){
+      if(this.bx===null){this.bx=s.x2;this.by=s.y2}
+      this.bx+=(s.x2-this.bx)*.3;this.by+=(s.y2-this.by)*.3;
+      for(let k=0;k<2;k++)this.dust.push({x:this.bx,y:this.by,vx:(Math.random()-.5)*.8,vy:Math.random()*.6+.1,life:1});
+    }
+    // dust
+    for(const d of this.dust){d.x+=d.vx;d.y+=d.vy;d.life-=.03;c.fillStyle=`rgba(240,238,232,${Math.max(0,d.life)*.7})`;c.fillRect(d.x,d.y,1.2,1.2)}
+    this.dust=this.dust.filter(d=>d.life>0);
+    if(!active||this.bx===null)return;
+    const L=Math.min(150,this.W*.32);
+    c.save();c.translate(this.bx,this.by);c.rotate(-Math.PI*.22+Math.sin(performance.now()/180)*.03);
+    // tip glow
+    const g=c.createRadialGradient(0,0,0,0,0,14);g.addColorStop(0,'rgba(255,255,255,.95)');g.addColorStop(.25,'rgba(200,240,230,.35)');g.addColorStop(1,'rgba(255,255,255,0)');
+    c.fillStyle=g;c.beginPath();c.arc(0,0,14,0,Math.PI*2);c.fill();
+    // blade (steel)
+    const bg=c.createLinearGradient(0,-6,0,6);bg.addColorStop(0,'#f4f6f7');bg.addColorStop(.5,'#9aa3a8');bg.addColorStop(1,'#dfe4e6');
+    c.fillStyle=bg;c.beginPath();c.moveTo(0,0);c.lineTo(L*.28,-7);c.lineTo(L*.34,-7);c.lineTo(L*.34,5);c.lineTo(L*.12,5);c.closePath();c.fill();
+    // handle (frosted white plastic, like the craft knife)
+    const hg=c.createLinearGradient(0,-9,0,9);hg.addColorStop(0,'rgba(255,255,255,.92)');hg.addColorStop(1,'rgba(205,210,212,.85)');
+    c.fillStyle=hg;c.beginPath();c.roundRect(L*.33,-9,L*.67,17,6);c.fill();
+    c.strokeStyle='rgba(0,0,0,.18)';c.lineWidth=1;c.beginPath();c.moveTo(L*.45,-9);c.lineTo(L*.45,8);c.stroke();
+    c.restore();
+  }
+}
+
+/* =====================================================================
+   Page wiring
+   ===================================================================== */
+const HERO = {src:U('photo-1643830179536-e658bb52c164',1400),fx:.5,fy:.45,cx:.5,cy:.42};
+const WORKS = [
+  {src:'photo-1643830179536-e658bb52c164',type:'cat',ar:1,    title:'灰灰的第一幅肖像，眼睛用了蓝绿色',likes:'15.6K',fy:.45},
+  {src:'photo-1549308423-a9b1b61cd4b1',  type:'dog',ar:.8,   title:'用亚克力板刻出最温柔的狗狗眼神',likes:'2,318',fy:.4},
+  {src:'photo-1767381392938-c95d24cd5873',type:'dog',ar:.8,  title:'白色西高地，几乎每一刀都在刻高光',likes:'938',fy:.4},
+  {src:'photo-1666356106134-0913d06cb8df',type:'cat',ar:1,   title:'睡着的小猫，送给它的十岁生日',likes:'1,204',fy:.5},
+  {src:'photo-1759197318767-45052fdf4668',type:'dog',ar:.8,  title:'黑棕色的毛最难刻，暗部全靠留黑',likes:'653',fy:.4},
+  {src:'photo-1739391262319-f3659f52bdfa',type:'dog',ar:.8,  title:'纪念款：它一直在这里看着我们',likes:'4,870',fy:.4},
+];
+
+const heroArt=document.getElementById('heroArt');
+const countEl=document.getElementById('strokeCount'),barEl=document.getElementById('liveBar'),labelEl=document.getElementById('liveLabel'),liveEl=document.getElementById('heroLive');
+let heroEng=null;
+const fmt=n=>n.toLocaleString('en-US');
+
+async function startHero(){
+  heroEng=new Engraver(heroArt,{...HERO,density:5.2,seed:11,
+    onProgress:(i,n)=>{countEl.textContent=fmt(i);barEl.style.width=(i/n*100).toFixed(1)+'%';labelEl.textContent=`LIVE · 正在刻画 ${Math.round(i/n*100)}%`},
+    onDone:e=>{liveEl.classList.add('finished');labelEl.textContent='完成 · FINISHED';countEl.textContent=fmt(e.strokes.length);barEl.style.width='100%';
+      buildMacro()}
+  });
+  try{
+    await heroEng.load(HERO.src);
+    const reduce=matchMedia('(prefers-reduced-motion: reduce)').matches;
+    reduce?heroEng.renderAll():heroEng.play(9000);
+  }catch(err){ heroFallback(); }
+}
+function heroFallback(){
+  const img=heroArt.querySelector('.fallback');img.src=HERO.src;heroArt.classList.add('use-fallback','done');
+  liveEl.classList.add('finished');labelEl.textContent='SAMPLE';barEl.style.width='100%';buildMacro(HERO.src);
+}
+document.getElementById('replay').addEventListener('click',()=>{if(!heroEng||!heroEng.strokes)return;liveEl.classList.remove('finished');heroEng.play(9000)});
+
+/* acrylic light follows the pointer + tilt the whole cutting mat */
+function attachLight(art,mat){
+  art.addEventListener('pointermove',e=>{const r=art.getBoundingClientRect();art.style.setProperty('--mx',(e.clientX-r.left)+'px');art.style.setProperty('--my',(e.clientY-r.top)+'px')});
+  if(!mat)return;
+  const stage=mat.parentElement;
+  stage.addEventListener('pointermove',e=>{const r=stage.getBoundingClientRect(),px=(e.clientX-r.left)/r.width-.5,py=(e.clientY-r.top)/r.height-.5;
+    mat.style.setProperty('--ry',(px*14-4)+'deg');mat.style.setProperty('--rx',(-py*12+4)+'deg')});
+  stage.addEventListener('pointerleave',()=>{mat.style.removeProperty('--ry');mat.style.removeProperty('--rx')});
+}
+attachLight(heroArt,document.getElementById('heroMat'));
+
+/* ---------- gallery ---------- */
+const gallery=document.getElementById('gallery');
+const heart='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 20s-7-4.4-9.3-8.6C1 8 3 4.5 6.6 4.5c2.1 0 3.4 1.2 4.4 2.6 1-1.4 2.3-2.6 4.4-2.6C19 4.5 21 8 19.3 11.4 17 15.6 12 20 12 20z"/></svg>';
+WORKS.forEach((w,idx)=>{
+  const el=document.createElement('article');el.className='card reveal';el.dataset.type=w.type;
+  el.innerHTML=`<div class="frame"><span class="badge idle">刻画成品</span><span class="badge hover">原照片</span>
+    <div class="art" style="aspect-ratio:${w.ar}"><canvas class="paint"></canvas><img alt="" loading="lazy" crossorigin="anonymous"></div></div>
+    <div class="meta"><h3>${w.title}</h3><div class="row"><span class="who"><span class="av"></span>刻光 Studio</span>
+    <button class="like" type="button" aria-label="喜欢">${heart}<span>${w.likes}</span></button></div></div>`;
+  el._work=w;gallery.appendChild(el);
+  el.addEventListener('click',e=>{if(!e.target.closest('.like'))el.classList.toggle('peek')});
+});
+gallery.addEventListener('click',e=>{const b=e.target.closest('.like');if(b)b.classList.toggle('on')});
+const peekCSS=document.createElement('style');peekCSS.textContent='.card.peek .art:not(.fallback) img{opacity:1}.card.peek .badge.hover{opacity:1}.card.peek .badge.idle{opacity:0}';document.head.appendChild(peekCSS);
+
+async function renderCard(el){
+  const w=el._work,art=el.querySelector('.art'),img=art.querySelector('img');
+  img.src=U(w.src,700);
+  try{
+    await (img.complete&&img.naturalWidth?Promise.resolve():new Promise((r,j)=>{img.onload=r;img.onerror=j}));
+    const eng=new Engraver(art,{fx:.5,fy:w.fy,cx:.5,cy:w.fy,density:4.5,seed:idx(w),grid:240});
+    await eng.load(img);
+    // quick cascade instead of one-shot so each card "gets cut" as it appears
+    eng.play(2600);
+  }catch(_){art.classList.add('fallback')}
+}
+const idx=w=>WORKS.indexOf(w)*13+3;
+
+document.querySelectorAll('.tab').forEach(t=>t.addEventListener('click',()=>{
+  document.querySelectorAll('.tab').forEach(x=>x.classList.toggle('on',x===t));
+  const f=t.dataset.filter;gallery.querySelectorAll('.card').forEach(c=>c.classList.toggle('hide',f!=='all'&&c.dataset.type!==f));
+}));
+
+/* ---------- reveal on scroll ---------- */
+const io=new IntersectionObserver(es=>es.forEach(e=>{if(!e.isIntersecting)return;e.target.classList.add('in');
+  if(e.target.classList.contains('card')&&!e.target._done){e.target._done=1;renderCard(e.target)}io.unobserve(e.target)}),{threshold:.12,rootMargin:'0px 0px -40px 0px'});
+document.querySelectorAll('.reveal').forEach(el=>io.observe(el));
+
+/* ---------- macro zoom ---------- */
+let macroEl=null;
+function buildMacro(src){
+  const host=document.getElementById('macroImg');if(macroEl)return;
+  if(src){macroEl=document.createElement('img');macroEl.alt='';macroEl.src=src}
+  else{ // redraw the hero strokes on a large canvas so the zoom stays sharp
+    const e=heroEng,size=Math.min(2600,Math.round(Math.min(innerHeight*.78,innerWidth*.88)*3.2*Math.min(2,devicePixelRatio||1)));
+    macroEl=document.createElement('canvas');macroEl.width=macroEl.height=size;
+    const c=macroEl.getContext('2d'),k=size/e.W;c.setTransform(k,0,0,k,0,0);c.fillStyle='#050506';c.fillRect(0,0,e.W,e.H);
+    const pc=e.pc;e.pc=c;e.drawRange(0,e.strokes.length);e.pc=pc;
+  }
+  macroEl.setAttribute('aria-hidden','true');host.appendChild(macroEl);onScroll();
+}
+const macro=document.getElementById('macro'),m1=document.getElementById('m1'),m2=document.getElementById('m2');
+function onScroll(){
+  document.getElementById('nav').classList.toggle('scrolled',scrollY>20);
+  if(!macroEl)return;
+  const r=macro.getBoundingClientRect(),total=r.height-innerHeight,p=Math.min(1,Math.max(0,-r.top/total));
+  const z=1+Math.pow(p,1.6)*2.6;
+  macroEl.style.transform=`scale(${z})`;
+  m1.classList.toggle('on',p>.04&&p<.38);m2.classList.toggle('on',p>.5&&p<.97);
+}
+addEventListener('scroll',onScroll,{passive:true});
+
+/* ---------- order form + live preview ---------- */
+const previewArt=document.getElementById('previewArt');
+let previewEng=new Engraver(previewArt,{fx:.5,fy:.45,cx:.5,cy:.42,density:5,seed:5});
+attachLight(previewArt);
+const pio=new IntersectionObserver(es=>{if(es[0].isIntersecting){pio.disconnect();
+  previewEng.load(U('photo-1549308423-a9b1b61cd4b1',1000)).then(e=>e.play(5000)).catch(()=>{})}},{threshold:.3});
+pio.observe(previewArt);
+
+const fileIn=document.getElementById('file'),drop=document.getElementById('drop');
+function useFile(f){
+  if(!f||!f.type.startsWith('image/'))return;
+  const url=URL.createObjectURL(f);
+  document.getElementById('previewLabel').textContent='你的毛孩子 · 刻画中';
+  document.getElementById('previewLive').classList.remove('finished');
+  previewEng.opt.onDone=()=>{document.getElementById('previewLabel').textContent='你的毛孩子 · 预览';document.getElementById('previewLive').classList.add('finished')};
+  previewEng.load(url).then(e=>{e.play(6000);document.querySelector('.preview').scrollIntoView({behavior:'smooth',block:'center'})});
+  drop.querySelector('strong').textContent='已选择：'+f.name;
+}
+fileIn.addEventListener('change',()=>useFile(fileIn.files[0]));
+['dragenter','dragover'].forEach(t=>drop.addEventListener(t,e=>{e.preventDefault();drop.classList.add('drag')}));
+['dragleave','drop'].forEach(t=>drop.addEventListener(t,e=>{e.preventDefault();drop.classList.remove('drag')}));
+drop.addEventListener('drop',e=>useFile(e.dataTransfer.files[0]));
+document.getElementById('petName').addEventListener('input',e=>document.getElementById('previewName').textContent=e.target.value.toUpperCase());
+
+function chipGroup(id,cb){const g=document.getElementById(id);g.addEventListener('click',e=>{const c=e.target.closest('.chip');if(!c)return;g.querySelectorAll('.chip').forEach(x=>x.classList.toggle('on',x===c));cb&&cb()})}
+const total=()=>{const s=+document.querySelector('#sizeChips .on').dataset.price,f=+document.querySelector('#frameChips .on').dataset.add;document.getElementById('total').textContent='¥'+fmt(s+f)};
+chipGroup('sizeChips',total);chipGroup('frameChips',total);
+document.querySelectorAll('.plan .btn[data-size]').forEach(b=>b.addEventListener('click',()=>{
+  document.querySelectorAll('#sizeChips .chip').forEach(c=>c.classList.toggle('on',c.dataset.size===b.dataset.size));total()}));
+
+const toast=document.getElementById('toast');
+function say(t){toast.textContent=t;toast.classList.add('show');clearTimeout(say.t);say.t=setTimeout(()=>toast.classList.remove('show'),3200)}
+document.getElementById('orderForm').addEventListener('submit',e=>{e.preventDefault();
+  if(!document.getElementById('contact').value.trim()){say('留个微信或手机号，我们好联系你～');return}
+  say('已收到！我们会在 24 小时内联系你（示例站点，未真正提交）')});
+
+/* resize: re-render finished canvases at the new size */
+let rt;addEventListener('resize',()=>{clearTimeout(rt);rt=setTimeout(()=>{
+  for(const e of [heroEng,previewEng]){if(e&&e.img&&e.i>=e.strokes.length){e.prepare();e.renderAll()}}
+},250)});
+
+document.getElementById('year').textContent=new Date().getFullYear();
+startHero();
+</script>
+</body>
+</html>

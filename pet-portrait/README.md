@@ -1,15 +1,17 @@
-# 刻光 Keguang — 亚克力宠物刻画定制（示例站点）
+# Strata — Layered Acrylic Pet Portraits (sample site)
 
-Sample landing page for a custom pet-portrait studio that hand-scratches pets onto black acrylic.
-Single file: `index.html` (inline CSS + JS, no build step).
+Sample landing page for a studio that hand-scratches pet portraits into stacked sheets of black and clear acrylic.
+Single page: `index.html` (inline CSS + JS, no build step). Images live in `assets/img/`.
 
 ## What moves
-- **Hero cover**: a canvas "engraver" turns a pet photo into ~30k white scratch strokes that follow the fur direction, cut one by one with an animated craft knife, a live stroke counter and a light sheen when it finishes. The cutting mat tilts with the pointer.
-- **Works**: Xiaohongshu-style cards on a cutting-mat background. Each card is engraved as it scrolls into view; hover (or tap) shows the original photo.
-- **Close-up**: a sticky section that zooms into the finished hero engraving while you scroll.
-- **Order form**: upload a photo and the preview engraves it in the browser (nothing is uploaded anywhere).
+- **Hero**: the portrait's acrylic sheets drop in one by one (back panel, fur layer, face layer, front sheet), then float apart slightly and follow the pointer. Scrolling pulls the sheets further apart.
+- **Anatomy of a portrait**: a pinned scroll section. The framed piece explodes into its six layers, steps through each one (the list on the left follows), then reassembles face-on.
+- **Selected works**: images reveal on scroll; a ×3 loupe follows the cursor so you can see the scratches.
+
+## Design
+Cool light grey and black, one typeface (Inter Tight), thin rules, lots of whitespace, English copy.
 
 ## Placeholders to replace
-- Brand name, prices, lead times and FAQ copy.
-- Photos are hot-linked from Unsplash (credited in the footer). Swap the IDs in `HERO` and `WORKS` in the script for real work photos.
+- Studio name, prices, lead times, contact details.
 - The order form does not submit anywhere yet.
+- The face/fur split in the layer effect is a soft oval mask (`--cx --cy --rx --ry` on each `.stack`). For real pieces, use separate photos of each layer.

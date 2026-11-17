@@ -177,6 +177,14 @@ def split(out, states, size=1000, lift=28):
     label[outside] = 0
     label[:b], label[-b:], label[:, :b], label[:, -b:] = 0, 0, 0, 0
     label = cv2.medianBlur(label, 21)
+    # a dark patch on a clear sheet is just untouched acrylic: hand it back to the black sheet
+    g = gray(final)
+    for k in range(1, len(imgs)):
+        n, lab, stt, _ = cv2.connectedComponentsWithStats((label == k).astype(np.uint8))
+        for j in range(1, n):
+            comp = lab == j
+            if stt[j, cv2.CC_STAT_AREA] < 800 or np.median(g[comp]) < bg + lift * 1.3:
+                label[comp] = 0
     meta = []
     for k in range(len(imgs)):
         region = (label == k).astype(np.uint8)

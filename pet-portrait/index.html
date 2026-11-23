@@ -41,11 +41,36 @@ button,input,textarea,select{font:inherit;color:inherit;background:none;border:0
 /* ---------- nav (inverts over dark / light) ---------- */
 .nav{position:fixed;inset:0 0 auto 0;z-index:40;display:grid;grid-template-columns:1fr auto 1fr;align-items:center;padding:20px var(--pad);color:#fff;mix-blend-mode:difference}
 .nav .brand{font-weight:500;letter-spacing:.14em;font-size:13px}
-.nav ul{display:flex;gap:28px;list-style:none}
-.nav a{font-size:13px}
-.nav a:hover{opacity:.6}
-.nav .right{justify-self:end}
-@media (max-width:760px){.nav ul{display:none}.nav{grid-template-columns:1fr 1fr}}
+.nav{grid-template-columns:1fr auto}
+.nav a,.nav button{font-size:13px;cursor:pointer}
+.nav a:hover,.nav button:hover{opacity:.6}
+.nav .right{justify-self:end;display:flex;gap:28px;align-items:center}
+.menu-btn{display:flex;gap:8px;align-items:center}
+.menu-btn .where{color:#fff;opacity:.55;transition:opacity .3s}
+.menu-btn .ico{position:relative;width:12px;height:12px}
+.menu-btn .ico::before,.menu-btn .ico::after{content:"";position:absolute;left:0;right:0;top:50%;height:1px;background:currentColor;transition:transform .4s var(--ease)}
+.menu-btn .ico::after{transform:rotate(90deg)}
+body.menu-open .menu-btn .ico::before{transform:rotate(45deg)}
+body.menu-open .menu-btn .ico::after{transform:rotate(-45deg)}
+@media (max-width:520px){.menu-btn .where{display:none}}
+
+/* one-page menu: a sheet that drops down over the page */
+html{scroll-behavior:smooth}
+.menu{position:fixed;inset:0 0 auto 0;z-index:39;background:var(--night);color:#fff;padding:96px var(--pad) 40px;
+  transform:translateY(-101%);transition:transform .8s var(--ease);box-shadow:0 30px 60px rgba(0,0,0,0)}
+body.menu-open .menu{transform:none;box-shadow:0 30px 60px rgba(0,0,0,.25)}
+.menu ol{list-style:none;border-top:1px solid var(--rule-dark)}
+.menu li{border-bottom:1px solid var(--rule-dark)}
+.menu li a{display:grid;grid-template-columns:48px 1fr auto;align-items:baseline;gap:12px;padding:18px 0;font-weight:300;font-size:clamp(28px,4.4vw,56px);letter-spacing:-.03em;line-height:1.05;color:#8f8f8c;transition:color .3s,padding .5s var(--ease)}
+.menu li a span:first-child,.menu li a span:last-child{font-size:12px;letter-spacing:.04em;font-weight:400}
+.menu li a:hover,.menu li a.on{color:#fff;padding-left:12px}
+.menu li{opacity:0;transform:translateY(-12px);transition:opacity .5s,transform .6s var(--ease)}
+body.menu-open .menu li{opacity:1;transform:none}
+body.menu-open .menu li:nth-child(2){transition-delay:.05s}body.menu-open .menu li:nth-child(3){transition-delay:.1s}
+body.menu-open .menu li:nth-child(4){transition-delay:.15s}body.menu-open .menu li:nth-child(5){transition-delay:.2s}
+.menu-foot{display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap;margin-top:28px;font-size:12px;color:#8a8a87}
+.menu-scrim{position:fixed;inset:0;z-index:38;background:rgba(0,0,0,.35);opacity:0;pointer-events:none;transition:opacity .5s}
+body.menu-open .menu-scrim{opacity:1;pointer-events:auto}
 
 /* ---------- acrylic sheets (shared) ---------- */
 .stack{position:relative;transform-style:preserve-3d}
@@ -61,7 +86,7 @@ button,input,textarea,select{font:inherit;color:inherit;background:none;border:0
 /* ---------- hero ---------- */
 .hero{position:relative;height:100svh;min-height:600px;background:var(--night);color:#fff;overflow:hidden}
 .hero-scene{position:absolute;inset:0;display:grid;place-items:center;perspective:1600px}
-.hero .stack{width:min(46vh,62vw);aspect-ratio:1100/1505;--cx:50%;--cy:56%;--rx:31%;--ry:24%}
+.hero .stack{width:min(56vh,62vw);aspect-ratio:1}
 .hero .sheet{opacity:0;transition:transform 1.8s var(--ease),opacity 1.2s var(--ease)}
 .hero-copy{position:absolute;left:var(--pad);right:var(--pad);bottom:clamp(20px,4vh,40px);display:flex;justify-content:space-between;align-items:flex-end;gap:24px;z-index:2;pointer-events:none}
 .hero h1{font-weight:300;font-size:clamp(34px,5.6vw,88px);line-height:.98;letter-spacing:-.035em}
@@ -72,7 +97,15 @@ button,input,textarea,select{font:inherit;color:inherit;background:none;border:0
 .hero-meta{text-align:right;font-size:12px;color:#9b9b98;line-height:1.7;opacity:0;transition:opacity 1.2s 1.2s}
 .hero.ready .hero-meta{opacity:1}
 .hero-meta b{color:#fff;font-weight:500}
-@media (max-width:760px){.hero-copy{flex-direction:column;align-items:flex-start}.hero-meta{text-align:left}.hero .stack{width:min(40vh,66vw);margin-top:-18vh}}
+.hero-meta .swap{display:block;transition:opacity .5s}
+.hero-meta.out .swap{opacity:0}
+.hero-dots{display:flex;gap:6px;justify-content:flex-end;margin-top:14px;pointer-events:auto}
+.hero-dots button{width:22px;height:2px;background:rgba(255,255,255,.25);cursor:pointer;position:relative;overflow:hidden}
+.hero-dots button i{position:absolute;inset:0;background:#fff;transform:scaleX(0);transform-origin:left}
+.hero-dots button.on i{animation:fill var(--dur,9s) linear forwards}
+@keyframes fill{to{transform:scaleX(1)}}
+.sheet.art-clear{box-shadow:inset 0 0 0 1px rgba(255,255,255,.28)}
+@media (max-width:760px){.hero-copy{flex-direction:column;align-items:flex-start}.hero-meta{text-align:left}.hero-dots{justify-content:flex-start}.hero .stack{width:min(40vh,66vw);margin-top:-18vh}}
 
 /* ---------- statement ---------- */
 .statement{padding:clamp(100px,16vw,220px) 0 clamp(80px,12vw,160px)}
@@ -101,9 +134,16 @@ button,input,textarea,select{font:inherit;color:inherit;background:none;border:0
 .layers .sheet.back{box-shadow:none}
 .layers .sheet.glass{box-shadow:inset 0 0 0 1px rgba(255,255,255,.6),0 0 0 1px rgba(0,0,0,.08)}
 .layers-shadow{position:absolute;width:min(54vh,40vw);aspect-ratio:1;background:rgba(0,0,0,.3);filter:blur(30px);pointer-events:none}
+.switch{display:flex;gap:18px;margin-top:28px;flex-wrap:wrap}
+.switch button{font-size:13px;color:var(--soft);border-bottom:1px solid transparent;padding-bottom:2px;cursor:pointer;transition:color .2s}
+.switch button.on{color:var(--ink);border-color:var(--ink)}
+.layers .art img{object-fit:contain}
+.layers .art.clear{background:none;box-shadow:inset 0 0 0 1px rgba(255,255,255,.35)}
+.layers .stack.swap .sheet{opacity:0!important;transition:opacity .25s}
 .layers-progress{position:absolute;right:var(--pad);bottom:var(--pad);font-size:12px;color:var(--mid);font-variant-numeric:tabular-nums}
 @media (max-width:860px){
   .layers{height:460vh}
+  .switch{margin-top:12px}
   .layers-pin{grid-template-columns:1fr;grid-template-rows:auto 1fr;padding-top:64px}
   .layers-list h2{margin:6px 0 12px;font-size:26px}
   .layers-list li{padding:7px 0;font-size:13px}
@@ -134,6 +174,21 @@ button,input,textarea,select{font:inherit;color:inherit;background:none;border:0
   .w1 figure,.w2 figure,.w1 .cap,.w2 .cap{grid-column:1/-1;grid-row:auto}
   .work figure{cursor:auto}
 }
+
+/* layered cards: hover pulls the sheets apart */
+.trio{display:grid;grid-template-columns:repeat(3,1fr);gap:clamp(16px,2vw,24px);margin-top:clamp(80px,10vw,140px)}
+.trio-head{display:flex;justify-content:space-between;align-items:baseline;grid-column:1/-1;margin-bottom:12px}
+.lcard figure{position:relative;aspect-ratio:1;background:var(--bg);perspective:1400px;cursor:pointer}
+.lcard .mini{position:absolute;inset:9%;transform-style:preserve-3d;transition:transform 1.1s var(--ease)}
+.lcard .mini img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;transition:transform 1.1s var(--ease),box-shadow 1.1s;backface-visibility:hidden}
+.lcard .mini img:first-child{box-shadow:0 20px 40px rgba(0,0,0,.25)}
+.lcard .mini img+img{box-shadow:inset 0 0 0 1px rgba(255,255,255,0)}
+.lcard:hover .mini,.lcard.open .mini{transform:rotateX(52deg) rotateZ(-34deg) scale(.82)}
+.lcard:hover .mini img+img,.lcard.open .mini img+img{box-shadow:inset 0 0 0 1px rgba(255,255,255,.35)}
+.lcard .cap{font-size:13px;line-height:1.8;margin-top:16px;display:flex;justify-content:space-between;gap:12px}
+.lcard .cap b{font-weight:500}
+.credit{font-size:11px;color:var(--soft);margin-top:4px}
+@media (max-width:860px){.trio{grid-template-columns:1fr}}
 
 /* ---------- process ---------- */
 .process{background:var(--night);color:#fff;padding:clamp(90px,12vw,170px) var(--pad)}
@@ -167,17 +222,18 @@ button,input,textarea,select{font:inherit;color:inherit;background:none;border:0
 form{grid-column:7/13;grid-row:1/4}
 .f{border-bottom:1px solid var(--rule);padding:18px 0 10px;display:flex;flex-direction:column;gap:4px;transition:border-color .3s}
 .f>label:first-child{font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--mid);font-weight:500}
+.f input::placeholder{color:var(--soft)}
 .f input,.f textarea{outline:none;font-size:17px;padding:4px 0;resize:none;width:100%}
 .f:focus-within{border-color:var(--ink)}
 .opts{display:flex;gap:18px;flex-wrap:wrap;padding-top:6px}
 .opts button{font-size:15px;color:var(--soft);cursor:pointer;padding:2px 0;border-bottom:1px solid transparent;transition:color .2s}
 .opts button.on{color:var(--ink);border-color:var(--ink)}
 .upload{cursor:pointer;font-size:15px;padding-top:6px;display:flex;justify-content:space-between}
-.thumbs{display:flex;gap:8px;flex-wrap:wrap}
-.thumbs img{width:56px;height:56px;object-fit:cover;filter:grayscale(1);margin-top:10px}
 .send{margin-top:36px;display:flex;justify-content:space-between;align-items:center;width:100%;padding:22px 0;border-top:1px solid var(--ink);border-bottom:1px solid var(--ink);font-size:17px;cursor:pointer}
 .send span:last-child{transition:transform .4s var(--ease)}
 .send:hover span:last-child{transform:translateX(8px)}
+.next-step{margin-top:12px;font-size:13px;color:var(--mid)}
+.f.err{border-color:#b3261e}
 .sent{margin-top:16px;font-size:13px;color:var(--mid);min-height:20px}
 @media (max-width:860px){.commission h2,.commission .intro,form{grid-column:1/-1;grid-row:auto}form{margin-top:48px}}
 
@@ -199,31 +255,33 @@ footer{background:var(--night);color:#fff;padding:clamp(60px,8vw,100px) var(--pa
 
 <nav class="nav">
   <a class="brand" href="#top">STRATA</a>
-  <ul>
-    <li><a href="#layers">Layers</a></li>
-    <li><a href="#works">Works</a></li>
-    <li><a href="#process">Process</a></li>
-    <li><a href="#sizes">Sizes</a></li>
-  </ul>
-  <div class="right"><a href="#commission">Commission ↗</a></div>
+  <div class="right">
+    <button class="menu-btn" id="menuBtn" type="button" aria-expanded="false" aria-controls="menu"><span class="where" id="where"></span><span>Menu</span><span class="ico" aria-hidden="true"></span></button>
+    <a href="#commission">Commission ↗</a>
+  </div>
 </nav>
+<div class="menu-scrim" id="menuScrim"></div>
+<div class="menu" id="menu" aria-hidden="true">
+  <ol>
+    <li><a href="#layers"><span>01</span><span>Layers</span><span>Anatomy of a portrait</span></a></li>
+    <li><a href="#works"><span>02</span><span>Works</span><span>Selected pieces</span></a></li>
+    <li><a href="#process"><span>03</span><span>Process</span><span>4 – 6 weeks</span></a></li>
+    <li><a href="#sizes"><span>04</span><span>Sizes</span><span>From $320</span></a></li>
+    <li><a href="#commission"><span>05</span><span>Commission</span><span>Start yours</span></a></li>
+  </ol>
+  <div class="menu-foot"><span>Hand-scratched layered acrylic pet portraits</span><span>Instagram · Xiaohongshu</span></div>
+</div>
 
 <!-- ================= HERO ================= -->
 <header class="hero" id="top">
   <div class="hero-scene">
-    <div class="stack" id="heroStack" role="img" aria-label="A terrier portrait made of stacked acrylic sheets">
-      <div class="sheet back"></div>
-      <div class="sheet"><img class="m-outer" src="assets/img/terrier-art.jpg" alt=""></div>
-      <div class="sheet clear"><img class="m-inner" src="assets/img/terrier-art.jpg" alt=""></div>
-      <div class="sheet glass"></div>
-    </div>
+    <div class="stack" id="heroStack" role="img" aria-label="A pet portrait made of stacked acrylic sheets"></div>
   </div>
   <div class="hero-copy">
     <h1><span><i>Portraits,</i></span><span><i>scratched into light.</i></span></h1>
-    <div class="hero-meta">
-      <b>N°014 — Terrier</b><br>
-      Hand-scratched acrylic, 3 layers<br>
-      20 × 25 cm
+    <div class="hero-meta" id="heroMeta">
+      <span class="swap"><b id="heroName"></b><br><span id="heroDesc"></span></span>
+      <div class="hero-dots" id="heroDots"></div>
     </div>
   </div>
 </header>
@@ -241,26 +299,13 @@ footer{background:var(--night);color:#fff;padding:clamp(60px,8vw,100px) var(--pa
   <div class="layers-pin">
     <div class="layers-list">
       <span class="label muted">Anatomy of a portrait</span>
-      <h2>Six layers,<br>one face.</h2>
-      <ol id="layerList">
-        <li data-i="5"><span>01</span><span>Frame<small>Smoked oak, hand-joined</small></span><span>20 mm</span></li>
-        <li data-i="4"><span>02</span><span>Front sheet<small>Clear acrylic that protects the surface</small></span><span>2 mm</span></li>
-        <li data-i="3"><span>03</span><span>Mount<small>Cotton mat board with a bevelled window</small></span><span>2 mm</span></li>
-        <li data-i="2"><span>04</span><span>Face layer<small>Eyes, nose and whiskers scratched into clear acrylic, then hand-tinted</small></span><span>2 mm</span></li>
-        <li data-i="1"><span>05</span><span>Fur layer<small>Ears and outer coat scratched into black acrylic</small></span><span>3 mm</span></li>
-        <li data-i="0"><span>06</span><span>Back panel<small>Solid black acrylic that gives the image its depth</small></span><span>3 mm</span></li>
-      </ol>
+      <h2 id="layersTitle"></h2>
+      <ol id="layerList"></ol>
+      <div class="switch" id="layersSwitch"></div>
     </div>
     <div class="layers-scene">
       <div class="layers-shadow" id="layersShadow"></div>
-      <div class="stack" id="layersStack" role="img" aria-label="Exploded view of a framed portrait showing its six layers">
-        <div class="sheet back"></div>
-        <div class="sheet art"><img class="m-outer" src="assets/img/abyssinian-art.jpg" alt=""></div>
-        <div class="sheet art clear"><img class="m-inner" src="assets/img/abyssinian-art.jpg" alt=""></div>
-        <div class="sheet mat"></div>
-        <div class="sheet glass"></div>
-        <div class="sheet frame"></div>
-      </div>
+      <div class="stack" id="layersStack" role="img" aria-label="Exploded view of a framed portrait and its layers"></div>
       <div class="layers-progress" id="layersProgress">00 / 06</div>
     </div>
   </div>
@@ -289,6 +334,10 @@ footer{background:var(--night);color:#fff;padding:clamp(60px,8vw,100px) var(--pa
       20 × 25 cm · 3 layers · tinted tongue
     </div>
   </article>
+
+  <div class="trio" id="trio">
+    <div class="trio-head rv"><span class="label muted">Layered pieces</span><span class="label muted">Hover to separate the sheets</span></div>
+  </div>
 </section>
 <div class="loupe" id="loupe"></div>
 
@@ -310,8 +359,8 @@ footer{background:var(--night);color:#fff;padding:clamp(60px,8vw,100px) var(--pa
     <thead><tr><th>Size</th><th class="hide-s">Layers</th><th class="hide-s">Lead time</th><th>From</th><th></th></tr></thead>
     <tbody>
       <tr><td><i class="swatch" style="width:22px;height:22px"></i>15 × 15 cm</td><td class="hide-s">2</td><td class="hide-s">4 weeks</td><td>$320</td><td style="text-align:right"><a class="pick" href="#commission" data-size="15 × 15">Select</a></td></tr>
-      <tr><td><i class="swatch" style="width:30px;height:30px"></i>20 × 20 cm</td><td class="hide-s">3</td><td class="hide-s">5 weeks</td><td>$480</td><td style="text-align:right"><a class="pick" href="#commission" data-size="20 × 20">Select</a></td></tr>
-      <tr><td><i class="swatch" style="width:44px;height:44px"></i>30 × 30 cm</td><td class="hide-s">4</td><td class="hide-s">6 weeks</td><td>$760</td><td style="text-align:right"><a class="pick" href="#commission" data-size="30 × 30">Select</a></td></tr>
+      <tr><td><i class="swatch" style="width:30px;height:30px"></i>20 × 20 cm</td><td class="hide-s">3</td><td class="hide-s">5 weeks</td><td>$360</td><td style="text-align:right"><a class="pick" href="#commission" data-size="20 × 20">Select</a></td></tr>
+      <tr><td><i class="swatch" style="width:44px;height:44px"></i>30 × 30 cm</td><td class="hide-s">4</td><td class="hide-s">6 weeks</td><td>$480</td><td style="text-align:right"><a class="pick" href="#commission" data-size="30 × 30">Select</a></td></tr>
     </tbody>
   </table>
   <p class="note">Each additional pet in the same portrait +40%. Memorial portraits from older photos are welcome.</p>
@@ -321,21 +370,17 @@ footer{background:var(--night);color:#fff;padding:clamp(60px,8vw,100px) var(--pa
 <section class="commission" id="commission">
   <div class="grid">
     <h2 class="rv">Commission<br>a portrait.</h2>
-    <p class="intro rv">Tell us about them and attach a few photos. We reply within two working days with a sketch plan and a quote.</p>
+    <p class="intro rv">Tell us about them here, then send a few photos on WhatsApp. We reply within two working days with a sketch plan and a quote.</p>
     <form id="form" novalidate class="rv">
-      <div class="f"><label for="name">Your name</label><input id="name" autocomplete="name"></div>
-      <div class="f"><label for="email">Email</label><input id="email" type="email" autocomplete="email"></div>
+      <div class="f"><label for="name">Your name</label><input id="name" autocomplete="name" required></div>
+      <div class="f"><label for="phone">WhatsApp / phone</label><input id="phone" type="tel" autocomplete="tel" inputmode="tel" placeholder="+1 604 555 0123" required></div>
+      <div class="f"><label for="email">Email (optional)</label><input id="email" type="email" autocomplete="email"></div>
       <div class="f"><label for="pet">Their name</label><input id="pet"></div>
       <div class="f"><label>Size</label><div class="opts" id="sizeOpts"><button type="button">15 × 15</button><button type="button" class="on">20 × 20</button><button type="button">30 × 30</button></div></div>
       <div class="f"><label>Frame</label><div class="opts" id="frameOpts"><button type="button" class="on">Smoked oak</button><button type="button">Black ash</button><button type="button">Brushed steel</button></div></div>
-      <div class="f">
-        <label for="photos">Photos</label>
-        <label class="upload" for="photos"><span id="upText">Attach photos</span><span>+</span></label>
-        <input id="photos" type="file" accept="image/*" multiple hidden>
-        <div class="thumbs" id="thumbs"></div>
-      </div>
       <div class="f"><label for="msg">Anything we should know</label><textarea id="msg" rows="2"></textarea></div>
-      <button class="send" type="submit"><span>Send request</span><span>→</span></button>
+      <button class="send" type="submit"><span>Continue on WhatsApp</span><span>→</span></button>
+      <p class="next-step">Next, WhatsApp opens with your request filled in. Press send, then add a few photos of them in the chat.</p>
       <p class="sent" id="sent" role="status"></p>
     </form>
   </div>
@@ -359,25 +404,60 @@ const lerp=(a,b,t)=>a+(b-a)*t;
 const ease=t=>t<.5?4*t*t*t:1-Math.pow(-2*t+2,3)/2;
 const reduce=matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-/* ---------- HERO: sheets drop in one by one, then float apart with pointer + scroll ---------- */
+/* ---------- WORKS with extracted layers (sheet 1 = black back sheet, last = top) ---------- */
+const A=p=>(window.ASSETS&&ASSETS[p])||p;
+const LAYERED=[
+  {key:'golden',no:'N°021',name:'Golden Retriever',size:'20 × 20 cm',layers:['Outer coat','Coat highlights','Brow and eyes','Forehead','Muzzle and jaw','Nose and tongue']},
+  {key:'upcat',no:'N°024',name:'Looking Up',size:'20 × 20 cm',layers:['Ears and outer coat','Left cheek and eye','Right cheek and eye','Nose and mouth']},
+  {key:'schnauzer',no:'N°027',name:'Schnauzer',size:'20 × 20 cm',layers:['Ears and outer coat','Forehead','Face','Muzzle and tongue','Nose']}
+];
+const layerSrc=(w,i)=>A(`assets/layers/${w.key}/${i+1}.webp`);
+const words=['','One','Two','Three','Four','Five','Six','Seven','Eight','Nine','Ten','Eleven','Twelve'];
+
+/* ---------- HERO: each work's sheets drop in one by one, float, then fly out for the next ---------- */
 const hero=document.querySelector('.hero'),heroStack=document.getElementById('heroStack');
-const hSheets=[...heroStack.children];
-hSheets.forEach((s,i)=>s.style.transform=`translateZ(${700+i*240}px)`);
-let live=false,liveAt=0,hx=0,hy=0,tx=0,ty=0;
-requestAnimationFrame(()=>requestAnimationFrame(()=>{
-  hero.classList.add('ready');
-  hSheets.forEach((s,i)=>{s.style.transitionDelay=(i*.28)+'s';s.style.opacity=1;s.style.transform=`translateZ(${i*10}px)`});
-}));
-setTimeout(()=>{hSheets.forEach(s=>{s.style.transition='none'});live=true;liveAt=performance.now()},reduce?0:2900);
+const heroMeta=document.getElementById('heroMeta'),heroDots=document.getElementById('heroDots');
+const HOLD=9000;
+let hSheets=[],live=false,liveAt=0,hx=0,hy=0,tx=0,ty=0,cur=-1,timer=0,busy=false;
+heroDots.style.setProperty('--dur',HOLD+'ms');
+heroDots.innerHTML=LAYERED.map((w,i)=>`<button type="button" aria-label="Show ${w.name}"><i></i></button>`).join('');
+const dots=[...heroDots.children];
+dots.forEach((d,i)=>d.addEventListener('click',()=>show(i)));
+function enter(i){
+  const w=LAYERED[i],n=w.layers.length;
+  // the bottom sheet shows the whole piece so no black seams open up when the sheets drift apart
+  heroStack.innerHTML=w.layers.map((_,k)=>`<div class="sheet${k?' art-clear':' back'}"><img src="${k?layerSrc(w,k):A(`assets/layers/${w.key}/full.webp`)}" alt=""></div>`).join('')+'<div class="sheet glass"></div>';
+  hSheets=[...heroStack.children];
+  hSheets.forEach((s,k)=>{s.style.transition='none';s.style.opacity=0;s.style.transform=`translateZ(${700+k*180}px)`});
+  heroStack.offsetWidth;
+  const step=reduce?0:.22;
+  hSheets.forEach((s,k)=>{s.style.transition='transform 1.6s var(--ease),opacity 1s var(--ease)';s.style.transitionDelay=(k*step)+'s';s.style.opacity=1;s.style.transform=`translateZ(${k*6}px)`});
+  document.getElementById('heroName').textContent=`${w.no} — ${w.name}`;
+  document.getElementById('heroDesc').innerHTML=`Hand-scratched acrylic, ${n} layers<br>${w.size}`;
+  heroMeta.classList.remove('out');
+  dots.forEach((d,k)=>{d.classList.remove('on');void d.offsetWidth;d.classList.toggle('on',k===i)});
+  live=false;
+  setTimeout(()=>{hSheets.forEach(s=>s.style.transition='none');live=true;liveAt=performance.now();busy=false},reduce?0:1600+hSheets.length*220);
+}
+function show(i){
+  if(busy||i===cur)return;busy=true;clearTimeout(timer);
+  const go=()=>{cur=i;enter(i);timer=setTimeout(()=>show((cur+1)%LAYERED.length),HOLD)};
+  if(cur<0)return go();
+  live=false;heroMeta.classList.add('out');
+  const n=hSheets.length;
+  hSheets.forEach((s,k)=>{s.style.transition='transform .9s cubic-bezier(.7,0,.84,0),opacity .7s ease-in';s.style.transitionDelay=((n-1-k)*.07)+'s';s.style.transform=`translateZ(${900+k*160}px)`;s.style.opacity=0});
+  setTimeout(go,reduce?0:900+n*70);
+}
+requestAnimationFrame(()=>requestAnimationFrame(()=>{hero.classList.add('ready');show(0)}));
 addEventListener('pointermove',e=>{tx=e.clientX/innerWidth-.5;ty=e.clientY/innerHeight-.5});
 function heroFrame(now){
   const t=now/1000;
   hx=lerp(hx,tx,.05);hy=lerp(hy,ty,.05);
   heroStack.style.transform=`rotateX(${10-hy*14}deg) rotateY(${-18+hx*28+Math.sin(t*.4)*3}deg)`;
   if(live){
-    const open=ease(clamp((now-liveAt)/1600));
+    const open=ease(clamp((now-liveAt)/1600)),k=4/Math.max(4,hSheets.length)*Math.min(1,innerWidth/1100);
     const scroll=clamp(scrollY/innerHeight,0,1.2);
-    const gap=10+open*(18+Math.sin(t*.9)*5)+scroll*150;   // scrolling pulls the sheets apart
+    const gap=6+open*(16+Math.sin(t*.9)*5)*k+scroll*110*k;   // scrolling pulls the sheets apart
     hSheets.forEach((s,i)=>s.style.transform=`translateZ(${i*gap}px)`);
   }
   requestAnimationFrame(heroFrame);
@@ -386,9 +466,25 @@ requestAnimationFrame(heroFrame);
 
 /* ---------- EXPLODED VIEW driven by scroll ---------- */
 const layers=document.getElementById('layers'),lStack=document.getElementById('layersStack');
-const lSheets=[...lStack.children],lShadow=document.getElementById('layersShadow');
-const lItems=[...document.querySelectorAll('#layerList li')],lProg=document.getElementById('layersProgress');
-const N=lSheets.length;
+const lShadow=document.getElementById('layersShadow'),lProg=document.getElementById('layersProgress');
+const lList=document.getElementById('layerList'),lSwitch=document.getElementById('layersSwitch');
+let lSheets=[],lItems=[],N=0;
+function buildLayers(idx){
+  const w=LAYERED[idx];
+  const sheets=w.layers.map((name,k)=>({html:`<div class="sheet art${k?' clear':''}"${k?'':' style="background:#060606"'}><img src="${layerSrc(w,k)}" alt=""></div>`,name,note:k?'Scratched into clear acrylic':'Scratched into black acrylic',mm:k?'2 mm':'3 mm'}));
+  sheets.push({html:'<div class="sheet mat"></div>',name:'Mount',note:'Cotton mat board with a bevelled window',mm:'2 mm'});
+  sheets.push({html:'<div class="sheet glass"></div>',name:'Front sheet',note:'Clear acrylic that protects the surface',mm:'2 mm'});
+  sheets.push({html:'<div class="sheet frame"></div>',name:'Frame',note:'Hand-joined wood',mm:'20 mm'});
+  lStack.innerHTML=sheets.map(x=>x.html).join('');
+  lList.innerHTML=sheets.map((x,i)=>({x,i})).reverse().map(({x,i},k)=>`<li data-i="${i}"><span>${String(k+1).padStart(2,'0')}</span><span>${x.name}<small>${x.note}</small></span><span>${x.mm}</span></li>`).join('');
+  document.getElementById('layersTitle').innerHTML=`${words[sheets.length]} layers,<br>one face.`;
+  lSwitch.querySelectorAll('button').forEach((b,k)=>b.classList.toggle('on',k===idx));
+  lSheets=[...lStack.children];lItems=[...lList.children];N=lSheets.length;
+  layersFrame();
+}
+lSwitch.innerHTML=LAYERED.map(w=>`<button type="button">${w.name}</button>`).join('');
+lSwitch.querySelectorAll('button').forEach((b,k)=>b.addEventListener('click',()=>{
+  lStack.classList.add('swap');setTimeout(()=>{buildLayers(k);requestAnimationFrame(()=>lStack.classList.remove('swap'))},250)}));
 function layersFrame(){
   const r=layers.getBoundingClientRect(),p=clamp(-r.top/(r.height-innerHeight));
   // 0–.22 explode · .25–.8 step through each layer · .82–.98 re-assemble, face on
@@ -406,9 +502,39 @@ function layersFrame(){
     s.style.opacity=active===-1||i===active?1:.5+.5*(1-open);
   });
   lItems.forEach(li=>li.classList.toggle('on',+li.dataset.i===active));
-  lProg.textContent=(active===-1?(p>.8?'06':'00'):String(N-active).padStart(2,'0'))+' / 06';
+  const nn=String(N).padStart(2,'0');
+  lProg.textContent=(active===-1?(p>.8?nn:'00'):String(N-active).padStart(2,'0'))+' / '+nn;
 }
-addEventListener('scroll',layersFrame,{passive:true});addEventListener('resize',layersFrame);layersFrame();
+addEventListener('scroll',layersFrame,{passive:true});addEventListener('resize',layersFrame);buildLayers(0);
+
+/* ---------- layered cards ---------- */
+const trio=document.getElementById('trio');
+LAYERED.forEach(w=>{
+  const n=w.layers.length,el=document.createElement('article');el.className='lcard rv';
+  el.innerHTML=`<figure><div class="mini">${w.layers.map((_,k)=>`<img src="${layerSrc(w,k)}" alt="" loading="lazy" style="--z:${k}">`).join('')}</div></figure>
+    <div class="cap"><span><span class="label muted">${w.no}</span><br><b>${w.name}</b><br>${w.size} · ${n} layers</span></div>
+    <p class="credit">Artwork: Qin Ze</p>`;
+  const imgs=[...el.querySelectorAll('.mini img')];
+  const set=open=>imgs.forEach((im,k)=>im.style.transform=`translateZ(${open?k*(150/n):0}px)`);
+  el.addEventListener('mouseenter',()=>set(1));el.addEventListener('mouseleave',()=>{if(!el.classList.contains('open'))set(0)});
+  el.addEventListener('click',()=>{el.classList.toggle('open');set(el.classList.contains('open'))});
+  trio.appendChild(el);
+});
+
+/* ---------- one-page menu ---------- */
+const menuBtn=document.getElementById('menuBtn'),menu=document.getElementById('menu');
+function setMenu(open){document.body.classList.toggle('menu-open',open);menuBtn.setAttribute('aria-expanded',open);menu.setAttribute('aria-hidden',!open)}
+menuBtn.addEventListener('click',()=>setMenu(!document.body.classList.contains('menu-open')));
+document.getElementById('menuScrim').addEventListener('click',()=>setMenu(false));
+menu.querySelectorAll('a').forEach(a=>a.addEventListener('click',()=>setMenu(false)));
+addEventListener('keydown',e=>{if(e.key==='Escape')setMenu(false)});
+document.querySelectorAll('a[href="#commission"]').forEach(a=>a.addEventListener('click',()=>setMenu(false)));
+// show which section you are in next to "Menu"
+const SECTIONS=[['layers','Layers'],['works','Works'],['process','Process'],['sizes','Sizes'],['commission','Commission']];
+const whereEl=document.getElementById('where');
+function where(){let cur='';for(const [id,name] of SECTIONS){const el=document.getElementById(id);if(el&&el.getBoundingClientRect().top<innerHeight*.4)cur=name}
+  whereEl.textContent=cur?cur+' ·':'';menu.querySelectorAll('a').forEach(a=>a.classList.toggle('on',a.getAttribute('href').slice(1)===cur.toLowerCase()))}
+addEventListener('scroll',where,{passive:true});where();
 
 /* ---------- reveals ---------- */
 const io=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){e.target.classList.add('in');io.unobserve(e.target)}}),{threshold:.15});
@@ -416,8 +542,8 @@ document.querySelectorAll('.rv,.work').forEach(el=>io.observe(el));
 
 /* ---------- loupe: see the scratches up close (desktop) ---------- */
 const loupe=document.getElementById('loupe'),Z=3;
-if(matchMedia('(hover: hover)').matches)document.querySelectorAll('.work figure').forEach(fig=>{
-  fig.addEventListener('pointerenter',()=>{loupe.style.backgroundImage=`url(${fig.dataset.zoom})`;loupe.classList.add('on')});
+if(matchMedia('(hover: hover)').matches)document.querySelectorAll('.work figure[data-zoom]').forEach(fig=>{
+  fig.addEventListener('pointerenter',()=>{loupe.style.backgroundImage=`url(${A(fig.dataset.zoom)})`;loupe.classList.add('on')});
   fig.addEventListener('pointerleave',()=>loupe.classList.remove('on'));
   fig.addEventListener('pointermove',e=>{
     const r=fig.getBoundingClientRect(),x=e.clientX-r.left,y=e.clientY-r.top;
@@ -432,12 +558,38 @@ function opts(id){const g=document.getElementById(id);g.addEventListener('click'
 opts('sizeOpts');opts('frameOpts');
 document.querySelectorAll('.pick').forEach(a=>a.addEventListener('click',()=>{
   document.querySelectorAll('#sizeOpts button').forEach(b=>b.classList.toggle('on',b.textContent===a.dataset.size))}));
-const photos=document.getElementById('photos'),thumbs=document.getElementById('thumbs');
-photos.addEventListener('change',()=>{thumbs.innerHTML='';[...photos.files].slice(0,6).forEach(f=>{const i=new Image();i.src=URL.createObjectURL(f);i.alt='';thumbs.appendChild(i)});
-  const n=photos.files.length;document.getElementById('upText').textContent=n?`${n} photo${n>1?'s':''} attached`:'Attach photos'});
-document.getElementById('form').addEventListener('submit',e=>{e.preventDefault();
-  const s=document.getElementById('sent'),em=document.getElementById('email').value.trim();
-  s.textContent=/.+@.+\..+/.test(em)?'Thank you. This is a sample site, so nothing was sent yet.':'Please add an email so we can reply.'});
+/* ---------- orders: save to Google Sheet, then continue on WhatsApp ---------- */
+const ORDER_CONFIG={
+  whatsapp:'16047295833',   // your WhatsApp number with country code, digits only, e.g. '14155550123'
+  sheetUrl:''    // the Google Apps Script web app URL (see ORDERS_SETUP.md)
+};
+const pick=id=>document.querySelector(`#${id} .on`)?.textContent||'';
+document.getElementById('form').addEventListener('submit',e=>{
+  e.preventDefault();
+  const v=id=>document.getElementById(id).value.trim();
+  const order={name:v('name'),phone:v('phone'),email:v('email'),pet:v('pet'),size:pick('sizeOpts')+' cm',frame:pick('frameOpts'),msg:v('msg')};
+  const s=document.getElementById('sent');
+  document.querySelectorAll('#form .f').forEach(f=>f.classList.remove('err'));
+  if(!order.name){document.getElementById('name').closest('.f').classList.add('err');s.textContent='Please add your name.';return}
+  if(order.phone.replace(/\D/g,'').length<7){document.getElementById('phone').closest('.f').classList.add('err');s.textContent='Please add a WhatsApp or phone number so we can reach you.';return}
+  if(order.email&&!/.+@.+\..+/.test(order.email)){document.getElementById('email').closest('.f').classList.add('err');s.textContent='That email does not look right.';return}
+  // 1) save a row in the Google Sheet (fire-and-forget; keepalive lets it finish while WhatsApp opens)
+  if(ORDER_CONFIG.sheetUrl){
+    fetch(ORDER_CONFIG.sheetUrl,{method:'POST',mode:'no-cors',keepalive:true,body:new URLSearchParams(order)}).catch(()=>{});
+  }
+  // 2) open WhatsApp with the request written out
+  const line=(label,val)=>val?`${label}: ${val}`:null;
+  const text=["Hi! I'd like to commission a pet portrait.","",
+    line('Name',order.name),line('Phone',order.phone),line('Email',order.email),line('Pet',order.pet),
+    line('Size',order.size),line('Frame',order.frame),line('Notes',order.msg),
+    "","I'll send photos here."].filter(x=>x!==null).join('\n');
+  if(ORDER_CONFIG.whatsapp){
+    window.open(`https://wa.me/${ORDER_CONFIG.whatsapp}?text=${encodeURIComponent(text)}`,'_blank','noopener');
+    s.textContent='Thank you! If WhatsApp did not open, message us there and we will pick it up.';
+  }else{
+    s.textContent='Saved. (Sample site: the WhatsApp number is not set yet.)';
+  }
+});
 document.getElementById('yr').textContent=new Date().getFullYear();
 </script>
 </body>

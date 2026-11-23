@@ -5,7 +5,7 @@
  */
 const SHEET_NAME = 'Orders';
 const NOTIFY_BY_EMAIL = true;   // email you whenever a new request arrives
-const HEADERS = ['Submitted', 'Name', 'Email', 'Pet name', 'Size', 'Frame', 'Notes', 'Status', 'Follow-up notes'];
+const HEADERS = ['Submitted', 'Name', 'WhatsApp / phone', 'Email', 'Pet name', 'Size', 'Frame', 'Notes', 'Status', 'Follow-up notes'];
 
 function doPost(e) {
   const lock = LockService.getScriptLock();
@@ -19,13 +19,13 @@ function doPost(e) {
       sheet.getRange(1, 1, 1, HEADERS.length).setFontWeight('bold');
     }
     const p = e.parameter || {};
-    const row = [new Date(), p.name, p.email, p.pet, p.size, p.frame, p.msg, 'New', ''].map(clean);
+    const row = [new Date(), p.name, p.phone, p.email, p.pet, p.size, p.frame, p.msg, 'New', ''].map(clean);
     sheet.appendRow(row);
 
     if (NOTIFY_BY_EMAIL) {
       MailApp.sendEmail(Session.getEffectiveUser().getEmail(),
         'New portrait request: ' + (p.name || 'someone'),
-        HEADERS.slice(0, 7).map((h, i) => h + ': ' + (row[i] || '-')).join('\n') +
+        HEADERS.slice(0, 8).map((h, i) => h + ': ' + (row[i] || '-')).join('\n') +
         '\n\nThey should also be messaging you on WhatsApp.\n' + ss.getUrl());
     }
     return ContentService.createTextOutput(JSON.stringify({ ok: true })).setMimeType(ContentService.MimeType.JSON);

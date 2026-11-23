@@ -1,7 +1,7 @@
 # Receiving commission requests (Google Sheet + WhatsApp)
 
 When a customer presses **Continue on WhatsApp**:
-1. Their request is saved as a new row in your Google Sheet (and you get an email).
+1. Their request (including their WhatsApp / phone number, which is required) is saved as a new row in your Google Sheet (and you get an email).
 2. WhatsApp opens with the request already written. They press send and add photos of their pet in the chat.
 
 ## 1. Create the sheet (about 5 minutes)
@@ -20,7 +20,7 @@ When a customer presses **Continue on WhatsApp**:
 In `index.html`, find `ORDER_CONFIG` and fill in:
 ```js
 const ORDER_CONFIG={
-  whatsapp:'14155550123',  // your number: country code + number, digits only
+  whatsapp:'16047295833',  // your number: country code + number, digits only
   sheetUrl:'https://script.google.com/macros/s/.../exec'
 };
 ```
